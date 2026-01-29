@@ -1,131 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KasiFix | Local Kasi Hustle Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KasiFix | Local Kasi Hustle Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
 <body class="bg-gray-50">
 
-    <nav class="bg-white border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
-                </div>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
-                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Safety</a>
-                    <button class="bg-[#f97316] text-white px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md">
-                        Join as a Hustler
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                    <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="find-work.html" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
+                    <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Safety</a>
+                    <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md">
+                        Join as a Hustler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <header class="bg-[#1e3a8a] py-16 px-4">
-        <div class="max-w-5xl mx-auto text-center text-white">
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">Local Kasi Hustle Hub</h1>
-            <p class="text-xl text-blue-100 mb-10">Find vetted local help for any job, big or small.</p>
-            
-            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
-                <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
-                    <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
-                    <input type="text" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
-                </div>
-                <div class="w-full md:w-48 px-4 py-2 flex items-center">
-                    <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
-                    <input type="text" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
-                </div>
-                <button class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
-                    Find Help
-                </button>
-            </div>
-        </div>
-    </header>
+    <header class="bg-[#1e3a8a] py-16 px-4">
+        <div class="max-w-5xl mx-auto text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">Local Kasi Hustle Hub</h1>
+            <p class="text-xl text-blue-100 mb-10">Find vetted local help for any job, big or small.</p>
+            
+            <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
+                <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
+                    <input type="text" placeholder="Gate motor repair, solar cleaning..." class="w-full outline-none text-gray-800">
+                </div>
+                <div class="w-full md:w-48 px-4 py-2 flex items-center">
+                    <i class="fa-solid fa-location-dot text-gray-400 mr-3"></i>
+                    <input type="text" placeholder="Location" class="w-full outline-none text-gray-800" value="Soweto">
+                </div>
+                <button class="w-full md:w-auto bg-[#f97316] text-white px-10 py-4 rounded-xl font-bold hover:bg-orange-600 transition">
+                    Find Help
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <section class="max-w-7xl mx-auto px-4 py-16">
-        <h2 class="text-3xl font-extrabold text-gray-900 mb-8">What do you need?</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-solar-panel text-blue-600 text-xl group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-gray-800">Solar Cleaning</h3>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-person-running text-blue-600 text-xl group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-gray-800">Queue Runners</h3>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-bolt text-blue-600 text-xl group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-gray-800">Generator Fix</h3>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
-                <div class="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-50">
-                    <i class="fa-solid fa-faucet text-blue-600 text-xl group-hover:text-orange-600"></i>
-                </div>
-                <h3 class="font-bold text-gray-800">Plumbing</h3>
-            </div>
-        </div>
-    </section>
+    <section class="max-w-7xl mx-auto px-4 py-16">
+        <div class="flex justify-between items-end mb-8">
+            <div>
+                <h2 class="text-3xl font-extrabold text-gray-900">What do you need?</h2>
+                <p class="text-gray-600">Choose a category to find the right hustler for the job.</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-faucet text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
+            </div>
 
-    <section class="bg-gray-100 py-16 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
-                    <p class="text-gray-600">Verified professionals in your area.</p>
-                </div>
-                <a href="#" class="text-orange-600 font-bold hover:underline">See All</a>
-            </div>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-solar-panel text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Solar & Backup</h3>
+            </div>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
-                    <div class="p-8">
-                        <div class="flex justify-between mb-4">
-                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">L</div>
-                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
-                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
-                            </span>
-                        </div>
-                        <h4 class="text-xl font-bold">Lucky Dube</h4>
-                        <p class="text-orange-500 font-semibold mb-4">Inverter & Battery Setup</p>
-                        <div class="flex items-center text-gray-500 text-sm mb-6">
-                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 4.9 (62 Reviews)
-                        </div>
-                        <div class="flex justify-between items-center border-t pt-6">
-                            <span class="text-2xl font-bold text-gray-900">R350<small class="text-sm font-normal text-gray-500">/hr</small></span>
-                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-car text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Mobile Car Wash</h3>
+            </div>
 
-    <footer class="bg-gray-900 text-white py-12 px-4">
-        <div class="max-w-7xl mx-auto text-center">
-            <div class="text-2xl font-bold mb-4">Kasi<span class="text-orange-500">Fix</span></div>
-            <p class="text-gray-400 mb-8">Building trust in the local South African economy.</p>
-            <div class="flex justify-center space-x-6">
-                <i class="fa-brands fa-facebook text-2xl hover:text-orange-500 cursor-pointer"></i>
-                <i class="fa-brands fa-whatsapp text-2xl hover:text-orange-500 cursor-pointer"></i>
-                <i class="fa-brands fa-instagram text-2xl hover:text-orange-500 cursor-pointer"></i>
-            </div>
-        </div>
-    </footer>
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-mobile-screen text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-person-running text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Queue Runners</h3>
+            </div>
+
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
+                <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
+                    <i class="fa-solid fa-scissors text-blue-600 group-hover:text-orange-600"></i>
+                </div>
+                <h3 class="font-bold text-sm text-gray-800">Mobile Barber</h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 pb-16">
+        <h3 class="text-xl font-bold mb-6">Popular Kasi Hustles</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-bolt"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Energy</p>
+                    <p class="text-gray-600">Generator Repair & Refill</p>
+                </div>
+            </div>
+            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-broom"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Cleaning</p>
+                    <p class="text-gray-600">Yard Cleaning & Waste Removal</p>
+                </div>
+            </div>
+            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-truck-ramp-box"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Transport</p>
+                    <p class="text-gray-600">Bakkie Hire & Furniture Moving</p>
+                </div>
+            </div>
+            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-utensils"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Catering</p>
+                    <p class="text-gray-600">Shisa Nyama & Party Platters</p>
+                </div>
+            </div>
+            <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Education</p>
+                    <p class="text-gray-600">Maths & Science Tutoring</p>
+                </div>
+            </div>
+             <div class="flex items-center p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition">
+                <div class="text-orange-500 mr-4"><i class="fa-solid fa-shirt"></i></div>
+                <div>
+                    <p class="font-bold text-gray-900 uppercase text-xs tracking-wider">Laundry</p>
+                    <p class="text-gray-600">Wash, Dry & Fold Service</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-100 py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900">Featured Hustlers</h2>
+                    <p class="text-gray-600">Verified professionals in your area.</p>
+                </div>
+                <a href="#" class="text-orange-600 font-bold hover:underline">See All</a>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
+                    <div class="p-8">
+                        <div class="flex justify-between mb-4">
+                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">L</div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
+                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-bold">Lucky Dube</h4>
+                        <p class="text-orange-500 font-semibold mb-4">Inverter & Battery Setup</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 4.9 (62 Reviews)
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-6">
+                            <span class="text-2xl font-bold text-gray-900">R350<small class="text-sm font-normal text-gray-500">/hr</small></span>
+                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
+                    <div class="p-8">
+                        <div class="flex justify-between mb-4">
+                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">T</div>
+                            <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full flex items-center h-fit">
+                                <i class="fa-solid fa-shield-check mr-1"></i> VETTED
+                            </span>
+                        </div>
+                        <h4 class="text-xl font-bold">Thandiwe M.</h4>
+                        <p class="text-orange-500 font-semibold mb-4">Event Catering & Decor</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 5.0 (40 Reviews)
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-6">
+                            <span class="text-2xl font-bold text-gray-900">Quote</span>
+                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200">
+                    <div class="p-8">
+                        <div class="flex justify-between mb-4">
+                            <div class="bg-gray-200 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-500">J</div>
+                        </div>
+                        <h4 class="text-xl font-bold">James Zulu</h4>
+                        <p class="text-orange-500 font-semibold mb-4">Painting & Tiling</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> 4.7 (18 Reviews)
+                        </div>
+                        <div class="flex justify-between items-center border-t pt-6">
+                            <span class="text-2xl font-bold text-gray-900">R200<small class="text-sm font-normal text-gray-500">/hr</small></span>
+                            <button class="bg-blue-900 text-white px-6 py-2 rounded-xl font-bold">Book</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="join-hustle" class="max-w-4xl mx-auto px-4 py-20">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+            <div class="bg-[#1e3a8a] p-10 md:w-1/3 text-white flex flex-col justify-center">
+                <h2 class="text-3xl font-extrabold mb-4">Start Earning.</h2>
+                <p class="text-blue-100 mb-6">Join 500+ local hustlers making a living through KasiFix.</p>
+                <ul class="space-y-4 text-sm">
+                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Set your own rates</li>
+                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Work in your area</li>
+                    <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Weekly payouts</li>
+                </ul>
+            </div>
+
+            <div class="p-10 md:w-2/3 bg-white">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
+                <form id="hustleForm" action="#" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                            <input type="text" placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                            <input type="tel" placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
+                        <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
+                            <option>Solar & Inverter Setup</option>
+                            <option>Plumbing & Leaks</option>
+                            <option>Mobile Car Wash</option>
+                            <option>Queue Runner / Errands</option>
+                            <option>Barber / Hair Stylist</option>
+                            <option>Bakkie Hire</option>
+                            <option>Other / General Handyman</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio (Tell customers why you're the best)</label>
+                        <textarea rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                    </div>
+
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+                                <p class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                            </div>
+                            <input type="file" class="hidden" />
+                        </label>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                        <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                        Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white py-12 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="text-2xl font-bold mb-4">Kasi<span class="text-orange-500">Fix</span></div>
+            <p class="text-gray-400 mb-8">Building trust in the local South African economy.</p>
+            <div class="flex justify-center space-x-6">
+                <i class="fa-brands fa-facebook text-2xl hover:text-orange-500 cursor-pointer"></i>
+                <i class="fa-brands fa-whatsapp text-2xl hover:text-orange-500 cursor-pointer"></i>
+                <i class="fa-brands fa-instagram text-2xl hover:text-orange-500 cursor-pointer"></i>
+            </div>
+            <div class="mt-8 text-gray-600 text-sm">
+                &copy; 2024 KasiFix. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center transform transition-all scale-105">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-check text-4xl text-green-600"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
+            <p class="text-gray-600 mb-8">
+                Siyabonga for signing up. Our team will send you a <strong>WhatsApp</strong> shortly to verify your details.
+            </p>
+            <button onclick="closeModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
+                Sharp, I'll wait
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('hustleForm');
+        const modal = document.getElementById('successModal');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Sending...";
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            setTimeout(() => {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                form.reset();
+                submitBtn.innerText = originalText;
+                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }, 1500);
+        });
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
