@@ -6,10 +6,9 @@
     <title>KasiFix | Local Kasi Hustle Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+   
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -23,7 +22,6 @@
     </style>
 </head>
 <body class="bg-gray-50">
-
     <nav class="bg-white border-b sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
@@ -33,6 +31,7 @@
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#featured-section" class="text-gray-600 hover:text-blue-900 font-medium">Find Work</a>
                     <a href="#" class="text-gray-600 hover:text-blue-900 font-medium">Safety</a>
+                    <a href="#" onclick="openAdminLogin(); return false;" class="text-gray-600 hover:text-blue-900 font-medium">Admin</a>
                     <button onclick="document.getElementById('join-hustle').scrollIntoView({behavior: 'smooth'})" class="bg-[#f97316] text-white px-6 py-2 rounded-full font-bold hover:bg-orange-600 transition shadow-md">
                         Join as a Hustler
                     </button>
@@ -40,12 +39,11 @@
             </div>
         </div>
     </nav>
-
     <header class="bg-[#1e3a8a] py-16 px-4">
         <div class="max-w-5xl mx-auto text-center text-white">
             <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">Local Kasi Hustle Hub</h1>
             <p class="text-xl text-blue-100 mb-10">Find vetted local help for any job, big or small.</p>
-            
+           
             <div class="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center max-w-3xl mx-auto">
                 <div class="flex-1 w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200 flex items-center">
                     <i class="fa-solid fa-magnifying-glass text-gray-400 mr-3"></i>
@@ -61,7 +59,6 @@
             </div>
         </div>
     </header>
-
     <section class="max-w-7xl mx-auto px-4 py-16">
         <div class="flex justify-between items-end mb-8">
             <div>
@@ -69,7 +66,7 @@
                 <p class="text-gray-600">Choose a category to find the right hustler for the job.</p>
             </div>
         </div>
-        
+       
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             <div onclick="filterByCategory('Plumbing')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
@@ -77,35 +74,31 @@
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Plumbing</h3>
             </div>
-
             <div onclick="filterByCategory('Solar')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-solar-panel text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Solar & Backup</h3>
             </div>
-
             <div onclick="filterByCategory('Car Wash')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-car text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Mobile Car Wash</h3>
             </div>
-
             <div onclick="filterByCategory('Phone Repair')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-mobile-screen text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Phone Repair</h3>
             </div>
-
             <div onclick="filterByCategory('Queue Runner')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-person-running text-blue-600 group-hover:text-orange-600"></i>
                 </div>
                 <h3 class="font-bold text-sm text-gray-800">Queue Runners</h3>
             </div>
-
+            </div>
             <div onclick="filterByCategory('Barber')" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-orange-500 transition cursor-pointer text-center group">
                 <div class="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-50">
                     <i class="fa-solid fa-scissors text-blue-600 group-hover:text-orange-600"></i>
@@ -114,7 +107,6 @@
             </div>
         </div>
     </section>
-
     <section class="max-w-7xl mx-auto px-4 pb-16">
         <h3 class="text-xl font-bold mb-6">Popular Kasi Hustles</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -141,7 +133,6 @@
             </div>
         </div>
     </section>
-
     <section id="featured-section" class="bg-gray-100 py-16 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-10">
@@ -151,12 +142,84 @@
                 </div>
                 <button onclick="toggleSeeAll()" id="see-all-btn" class="text-orange-600 font-bold hover:underline">See All</button>
             </div>
-
             <div id="hustlers-container" class="grid md:grid-cols-3 gap-8">
                 <div class="col-span-3 text-center py-10 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3"></i>
                     <p>Loading Hustlers from Kasi...</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADMIN DASHBOARD SECTION (hidden until login) -->
+    <section id="admin-section" class="hidden max-w-7xl mx-auto px-4 py-16">
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-extrabold text-gray-900">Admin Dashboard</h2>
+                <button onclick="logoutAdmin()" class="bg-red-600 text-white px-6 py-3 rounded-full font-bold hover:bg-red-700 transition">
+                    Logout
+                </button>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-6">Add New Hustler (appears immediately as verified)</h3>
+            <form id="adminAddForm" class="space-y-5 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="adminName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                        <input type="tel" id="adminPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
+                        <select id="adminCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
+                            <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                            <option value="Plumbing & Leaks">Plumbing & Leaks</option>
+                            <option value="Car Wash">Mobile Car Wash</option>
+                            <option value="Queue Runner">Queue Runner / Errands</option>
+                            <option value="Barber">Barber / Hair Stylist</option>
+                            <option value="Transport">Bakkie Hire</option>
+                            <option value="General">Other / General Handyman</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
+                        <input type="text" id="adminLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                    <input type="number" id="adminRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
+                    <textarea id="adminBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="adminVerified" checked class="w-4 h-4 text-orange-600 border-gray-300 rounded">
+                    <label class="ml-2 text-sm font-medium text-gray-700">Verified / Vetted (show publicly)</label>
+                </div>
+                <div class="flex items-center justify-center w-full">
+                    <label for="adminFileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+                            <p id="admin-file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                        </div>
+                        <input id="adminFileInput" type="file" class="hidden" accept="image/*" />
+                    </label>
+                </div>
+                <button type="submit" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                    Add Hustler
+                </button>
+            </form>
+
+            <h3 class="text-2xl font-bold mb-6">Manage All Hustlers</h3>
+            <div id="admin-hustlers-container" class="grid md:grid-cols-3 gap-8">
+                <!-- Admin cards loaded here -->
             </div>
         </div>
     </section>
@@ -172,10 +235,10 @@
                     <li class="flex items-center"><i class="fa-solid fa-check text-orange-500 mr-2"></i> Weekly payouts</li>
                 </ul>
             </div>
-
-            <div class="p-10 md:w-2/3 bg-white">
+            <div class=", "p-10 md:w-2/3 bg-white">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">Create your Hustler Profile</h3>
                 <form id="hustleForm" class="space-y-5">
+                    <!-- same as original -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
@@ -186,13 +249,12 @@
                             <input type="tel" id="inputPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
                             <select id="inputCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
                                 <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
-                                <option value="Plumbing">Plumbing & Leaks</option>
+                                <option value="Plumbing & Leaks">Plumbing & Leaks</option>
                                 <option value="Car Wash">Mobile Car Wash</option>
                                 <option value="Queue Runner">Queue Runner / Errands</option>
                                 <option value="Barber">Barber / Hair Stylist</option>
@@ -205,17 +267,14 @@
                             <input type="text" id="inputLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                         </div>
                     </div>
-
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
                         <input type="number" id="inputRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
                     </div>
-
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
                         <textarea id="inputBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
                     </div>
-
                     <div class="flex items-center justify-center w-full">
                         <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
                             <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -225,12 +284,10 @@
                             <input id="fileInput" type="file" class="hidden" accept="image/*" />
                         </label>
                     </div>
-
                     <div class="flex items-center">
                         <input type="checkbox" id="termsCheckbox" class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
                         <label class="ml-2 text-xs text-gray-500">I agree to the KasiFix Safety & Vetting Policy.</label>
                     </div>
-
                     <button type="submit" id="submitBtn" disabled class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
                         Submit Application
                     </button>
@@ -238,7 +295,6 @@
             </div>
         </div>
     </section>
-
     <footer class="bg-gray-900 text-white py-12 px-4">
         <div class="max-w-7xl mx-auto text-center">
             <div class="text-2xl font-bold mb-4">Kasi<span class="text-orange-500">Fix</span></div>
@@ -249,22 +305,25 @@
         </div>
     </footer>
 
-    <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
+    <!-- Success Modal (updated text) -->
+    <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4 flex">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center transform transition-all scale-105">
             <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fa-solid fa-check text-4xl text-green-600"></i>
             </div>
-            <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Received.</h3>
+            <h3 class="text-2xl font-extrabold text-gray-900 mb-2">Ayoba! Application Received</h3>
             <p class="text-gray-600 mb-8">
-                Siyabonga for signing up. Your profile is now live!
+                Siyabonga for signing up. Your application is under review and will appear once approved.
             </p>
             <button onclick="closeSuccessModal()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition shadow-lg">
-                Sharp, I'll check it
+                Sharp, OK
             </button>
         </div>
     </div>
 
+    <!-- Booking Modal (unchanged) -->
     <div id="bookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 hidden items-end sm:items-center justify-center z-[100] backdrop-blur-sm">
+        <!-- same as original -->
         <div class="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all scale-100">
             <div class="bg-[#1e3a8a] p-6 text-white relative">
                 <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-white hover:text-orange-500">
@@ -272,14 +331,13 @@
                 </button>
                 <div class="flex items-center">
                     <div id="modal-img-container" class="bg-white text-[#1e3a8a] w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-2xl mr-4 shadow-lg overflow-hidden">
-                        </div>
+                    </div>
                     <div>
                         <h3 id="modal-name" class="text-2xl font-bold">Hustler Name</h3>
                         <p id="modal-category" class="text-orange-400 font-medium">Category</p>
                     </div>
                 </div>
             </div>
-
             <div class="p-8">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center text-sm font-bold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
@@ -289,18 +347,15 @@
                         <i class="fa-solid fa-star mr-1"></i> <span id="modal-rating">5.0</span>
                     </div>
                 </div>
-
                 <div class="mb-8">
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">About</h4>
                     <p id="modal-bio" class="text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
-                        </p>
+                    </p>
                 </div>
-
                 <div class="mb-8">
                     <h4 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Hourly Rate</h4>
                     <p class="text-2xl font-bold text-[#1e3a8a]">R<span id="modal-rate">250</span><span class="text-sm font-normal text-gray-500">/hr</span></p>
                 </div>
-
                 <div class="space-y-3">
                     <a id="whatsapp-link" href="#" target="_blank" class="flex items-center justify-center w-full bg-[#25D366] text-white py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition shadow-lg">
                         <i class="fa-brands fa-whatsapp text-2xl mr-2"></i> Chat on WhatsApp
@@ -313,13 +368,27 @@
         </div>
     </div>
 
-    <script>
-        // *** CLOUDINARY CONFIGURATION ***
-        // You MUST replace these with your own details from your Cloudinary Dashboard
-        const CLOUD_NAME = 'dijpvzojr'; 
-        const UPLOAD_PRESET = 'Root'; // Must be an UNSIGNED upload preset
+    <!-- Admin Login Modal -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center">
+            <h3 class="text-2xl font-extrabold text-gray-900 mb-6">Admin Login</h3>
+            <input type="password" id="adminPassword" class="w-full px-4 py-3 rounded-xl border border-gray-200 mb-6 text-gray-800" placeholder="Enter admin password">
+            <button onclick="adminLogin()" class="w-full bg-[#1e3a8a] text-white py-3 rounded-xl font-bold hover:bg-blue-900 transition mb-3">
+                Login
+            </button>
+            <button onclick="closeAdminLogin()" class="text-gray-500 text-sm">Cancel</button>
+        </div>
+    </div>
 
-        // 1. Firebase Configuration
+    <script>
+        // CHANGE THIS PASSWORD TO SOMETHING SECURE!
+        const ADMIN_PASSWORD = "kasifixadmin2024";
+
+        // CLOUDINARY CONFIG (unchanged)
+        const CLOUD_NAME = 'dijpvzojr';
+        const UPLOAD_PRESET = 'Root';
+
+        // Firebase config (unchanged)
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -329,7 +398,6 @@
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
             measurementId: "G-8NKED4DENK"
         };
-
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -337,21 +405,16 @@
 
         let allHustlers = [];
         let viewAll = false;
+        let isAdmin = false;
+
         const container = document.getElementById('hustlers-container');
 
-        // 2. Terms & Conditions Logic
+        // Terms & File UI (unchanged)
         const termsCheckbox = document.getElementById('termsCheckbox');
         const submitBtn = document.getElementById('submitBtn');
-
         termsCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                submitBtn.disabled = false;
-            } else {
-                submitBtn.disabled = true;
-            }
+            submitBtn.disabled = !this.checked;
         });
-        
-        // 3. File Input UI Logic
         const fileInput = document.getElementById('fileInput');
         fileInput.addEventListener('change', function() {
             if(this.files && this.files[0]) {
@@ -359,57 +422,61 @@
             }
         });
 
-        // 4. Cloudinary Upload Function
+        // Admin file label
+        const adminFileInput = document.getElementById('adminFileInput');
+        if (adminFileInput) {
+            adminFileInput.addEventListener('change', function() {
+                if(this.files && this.files[0]) {
+                    document.getElementById('admin-file-label').innerText = "Selected: " + this.files[0].name;
+                }
+            });
+        }
+
+        // Cloudinary upload (unchanged)
         async function uploadImageToCloudinary(file) {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', UPLOAD_PRESET);
-
             try {
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
                     method: 'POST',
                     body: formData
                 });
                 const data = await response.json();
-                return data.secure_url; // Return the image URL
+                return data.secure_url;
             } catch (error) {
                 console.error("Cloudinary upload error:", error);
                 return null;
             }
         }
 
-        // 5. Render Logic (Updated to show image, rate, location)
-        function renderHustlers(hustlersToRender) {
-            container.innerHTML = ''; 
-
+        // PUBLIC RENDER (only verified hustlers)
+        function renderPublicHustlers(hustlersToRender) {
+            container.innerHTML = '';
             if (hustlersToRender.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-3 text-center py-10">
                         <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                             <i class="fa-regular fa-folder-open text-gray-400 text-2xl"></i>
                         </div>
-                        <p class="text-gray-500 font-medium">No hustlers found matching your criteria.</p>
+                        <p class="text-gray-500 font-medium">No verified hustlers found matching your criteria.</p>
                         <button onclick="resetFilters()" class="text-orange-500 font-bold mt-2 hover:underline">Clear Filters</button>
                     </div>
                 `;
                 return;
             }
-
             const displayList = viewAll ? hustlersToRender : hustlersToRender.slice(0, 3);
-
             displayList.forEach(h => {
                 const initial = h.name.charAt(0).toUpperCase();
-                const rating = h.rating || (4 + Math.random()).toFixed(1); // Default logic if null
+                const rating = h.rating || (4 + Math.random()).toFixed(1);
                 const reviews = h.reviews || Math.floor(Math.random() * 50) + 5;
-                
-                // Image Logic
+
                 let imageHtml = '';
                 if (h.imageUrl) {
                     imageHtml = `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-2xl object-cover bg-gray-100">`;
                 } else {
                     imageHtml = `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
                 }
-
                 const cardHTML = `
                 <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full transform transition hover:-translate-y-1 hover:shadow-xl">
                     <div class="p-8 flex-grow">
@@ -421,11 +488,8 @@
                         </div>
                         <h4 class="text-xl font-bold text-gray-900 line-clamp-1">${h.name}</h4>
                         <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
-                        
                         <p class="text-gray-500 text-xs mb-2"><i class="fa-solid fa-map-marker-alt mr-1"></i> ${h.location}</p>
-                        
                         <p class="text-gray-500 text-xs mb-4 line-clamp-2 min-h-[2.5em]">${h.bio}</p>
-                        
                         <div class="flex items-center text-gray-500 text-sm mb-6">
                             <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (${reviews} Reviews)
                         </div>
@@ -440,7 +504,6 @@
                 `;
                 container.innerHTML += cardHTML;
             });
-
             const seeAllBtn = document.getElementById('see-all-btn');
             if (hustlersToRender.length <= 3) {
                 seeAllBtn.style.display = 'none';
@@ -450,120 +513,157 @@
             }
         }
 
+        // ADMIN RENDER (all hustlers, with controls)
+        function renderAdminHustlers() {
+            const adminContainer = document.getElementById('admin-hustlers-container');
+            adminContainer.innerHTML = '';
+            if (allHustlers.length === 0) {
+                adminContainer.innerHTML = '<p class="text-gray-500">No hustlers yet.</p>';
+                return;
+            }
+            allHustlers.forEach(h => {
+                const initial = h.name.charAt(0).toUpperCase();
+                const rating = h.rating || (4 + Math.random()).toFixed(1);
+                const reviews = h.reviews || Math.floor(Math.random() * 50) + 5;
+
+                let imageHtml = h.imageUrl ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-14 h-14 rounded-2xl object-cover">` : `<div class="bg-gray-100 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-xl text-gray-600">${initial}</div>`;
+
+                const badgeHtml = h.verified ?
+                    `<span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-shield-check mr-1"></i> VETTED</span>` :
+                    `<span class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">PENDING</span>`;
+
+                const approveBtnText = h.verified ? "Unverify" : "Approve";
+                const approveBtnClass = h.verified ? "bg-yellow-600 hover:bg-yellow-700" : "bg-green-600 hover:bg-green-700";
+
+                const cardHTML = `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-200 flex flex-col h-full">
+                    <div class="p-8 flex-grow">
+                        <div class="flex justify-between mb-4">
+                            ${imageHtml}
+                            ${badgeHtml}
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900">${h.name}</h4>
+                        <p class="text-orange-500 font-semibold mb-2 text-sm">${h.category}</p>
+                        <p class="text-gray-500 text-xs mb-2"><i class="fa-solid fa-map-marker-alt mr-1"></i> ${h.location}</p>
+                        <p class="text-gray-500 text-xs mb-4">${h.bio}</p>
+                        <div class="flex items-center text-gray-500 text-sm mb-6">
+                            <i class="fa-solid fa-star text-yellow-400 mr-1"></i> ${rating} (${reviews} Reviews)
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-gray-100 bg-gray-50 px-8 py-4">
+                        <span class="text-xl font-bold text-gray-900">R${h.rate}/hr</span>
+                        <div class="space-x-2">
+                            <button onclick="toggleVerified('${h.id}')" class="${approveBtnClass} text-white px-4 py-2 rounded-xl font-bold text-sm">
+                                ${approveBtnText}
+                            </button>
+                            <button onclick="deleteHustler('${h.id}')" class="bg-red-600 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-red-700">
+                                Delete
+                            </button>
+                            <button onclick="openBookingModal('${h.id}')" class="bg-[#1e3a8a] text-white px-4 py-2 rounded-xl font-bold text-sm">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                `;
+                adminContainer.innerHTML += cardHTML;
+            });
+        }
+
+        // Firebase listener
         db.ref('hustlers').on('value', (snapshot) => {
             const data = snapshot.val();
             allHustlers = [];
-            
             if (data) {
                 Object.keys(data).forEach(key => {
-                    allHustlers.push({
-                        id: key,
-                        ...data[key]
-                    });
+                    allHustlers.push({ id: key, ...data[key], verified: data[key].verified || false });
                 });
-                allHustlers.reverse();
+                allHustlers.reverse(); // newest first
             }
-            performSearch(); 
+            performSearch();
+            if (isAdmin) renderAdminHustlers();
         });
 
+        // Search & filters (public only shows verified)
         function performSearch() {
             const keyword = document.getElementById('search-keyword').value.toLowerCase();
             const locationInput = document.getElementById('search-location').value.toLowerCase();
             const featuredTitle = document.getElementById('featured-subtext');
 
             let filtered = allHustlers.filter(h => {
-                const matchesKeyword = h.category.toLowerCase().includes(keyword) || 
-                                     h.bio.toLowerCase().includes(keyword) || 
+                const matchesKeyword = h.category.toLowerCase().includes(keyword) ||
+                                     h.bio.toLowerCase().includes(keyword) ||
                                      h.name.toLowerCase().includes(keyword);
-                
-                // Check stored location against search input
                 const hLocation = (h.location || '').toLowerCase();
                 const matchesLocation = locationInput === '' ? true : hLocation.includes(locationInput);
-                
                 return matchesKeyword && matchesLocation;
             });
 
+            const publicList = filtered.filter(h => h.verified);
+
             if (keyword) {
                 featuredTitle.innerText = `Results for "${keyword}"`;
-                viewAll = true; 
+                viewAll = true;
             } else {
                 featuredTitle.innerText = "Verified professionals in your area.";
-                if(!viewAll) viewAll = false;
+                if (!viewAll) viewAll = false;
             }
+            renderPublicHustlers(publicList);
 
-            renderHustlers(filtered);
-            
-            if(window.event && window.event.type === 'click') {
+            if (window.event && window.event.type === 'click') {
                 document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
             }
         }
 
         function filterByCategory(category) {
             document.getElementById('search-keyword').value = category;
-            viewAll = true; 
+            viewAll = true;
             performSearch();
             document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
         }
-
         function toggleSeeAll() {
             viewAll = !viewAll;
             performSearch();
         }
-
         function resetFilters() {
             document.getElementById('search-keyword').value = '';
             document.getElementById('search-location').value = 'Soweto';
             viewAll = false;
             performSearch();
         }
-
         document.getElementById('search-keyword').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') performSearch();
         });
 
-        // 6. Updated Form Submission (Async for Image Upload)
+        // Public form submission (verified = false)
         const form = document.getElementById('hustleForm');
         const modal = document.getElementById('successModal');
-
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const originalText = submitBtn.innerText;
             submitBtn.innerText = "Uploading & Saving...";
             submitBtn.disabled = true;
-            submitBtn.classList.add('opacity-75');
 
-            // Collect Data
             const name = document.getElementById('inputName').value;
             const phone = document.getElementById('inputPhone').value;
             const category = document.getElementById('inputCategory').value;
             const bio = document.getElementById('inputBio').value;
             const location = document.getElementById('inputLocation').value;
             const rate = document.getElementById('inputRate').value;
-            
-            // Handle Image Upload
+
             let imageUrl = null;
             if (fileInput.files.length > 0) {
                 imageUrl = await uploadImageToCloudinary(fileInput.files[0]);
                 if (!imageUrl) {
-                    alert("Image upload failed. Please check your internet or Cloudinary config.");
+                    alert("Image upload failed.");
                     submitBtn.innerText = originalText;
                     submitBtn.disabled = false;
-                    submitBtn.classList.remove('opacity-75');
-                    return; 
+                    return;
                 }
             }
 
             const newHustler = {
-                name: name,
-                phone: phone,
-                category: category,
-                bio: bio,
-                location: location, // User set location
-                rate: rate,         // User set rate
-                imageUrl: imageUrl, // Cloudinary URL
-                timestamp: Date.now(),
-                verified: false
+                name, phone, category, bio, location, rate, imageUrl, timestamp: Date.now(), verified: false
             };
 
             db.ref('hustlers').push(newHustler)
@@ -573,45 +673,105 @@
                     form.reset();
                     document.getElementById('file-label').innerText = "Upload Profile Photo";
                     submitBtn.innerText = originalText;
-                    submitBtn.disabled = true; // Disable again because checkbox is unchecked on reset
-                    submitBtn.classList.remove('opacity-75');
+                    submitBtn.disabled = true;
                 })
                 .catch((error) => {
-                    alert('Error submitting: ' + error.message);
+                    alert('Error: ' + error.message);
                     submitBtn.innerText = originalText;
-                    submitBtn.disabled = false; 
-                    submitBtn.classList.remove('opacity-75');
+                    submitBtn.disabled = false;
                 });
         });
-
         function closeSuccessModal() {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            document.getElementById('featured-section').scrollIntoView({behavior: 'smooth'});
         }
 
-        // 7. Booking Modal Logic (Updated for Image/Rate/Location)
-        const bookingModal = document.getElementById('bookingModal');
+        // Admin add form
+        document.getElementById('adminAddForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('adminName').value;
+            const phone = document.getElementById('adminPhone').value;
+            const category = document.getElementById('adminCategory').value;
+            const bio = document.getElementById('adminBio').value;
+            const location = document.getElementById('adminLocation').value;
+            const rate = document.getElementById('adminRate').value;
+            const verified = document.getElementById('adminVerified').checked;
 
+            let imageUrl = null;
+            if (adminFileInput.files.length > 0) {
+                imageUrl = await uploadImageToCloudinary(adminFileInput.files[0]);
+                if (!imageUrl) {
+                    alert("Image upload failed.");
+                    return;
+                }
+            }
+
+            const newHustler = { name, phone, category, bio, location, rate, imageUrl, verified, timestamp: Date.now() };
+            db.ref('hustlers').push(newHustler)
+                .then(() => {
+                    alert("Hustler added successfully!");
+                    document.getElementById('adminAddForm').reset();
+                    document.getElementById('admin-file-label').innerText = "Upload Profile Photo";
+                })
+                .catch(err => alert("Error: " + err.message));
+        });
+
+        // Admin controls
+        function toggleVerified(id) {
+            const h = allHustlers.find(item => item.id === id);
+            if (!h) return;
+            db.ref('hustlers/' + id).update({ verified: !h.verified });
+        }
+        function deleteHustler(id) {
+            if (confirm("Permanently delete this hustler?")) {
+                db.ref('hustlers/' + id).remove();
+            }
+        }
+
+        // Admin login/logout
+        function openAdminLogin() {
+            document.getElementById('adminLoginModal').classList.remove('hidden');
+            document.getElementById('adminLoginModal').classList.add('flex');
+        }
+        function closeAdminLogin() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+            document.getElementById('adminLoginModal').classList.remove('flex');
+            document.getElementById('adminPassword').value = '';
+        }
+        function adminLogin() {
+            const pw = document.getElementById('adminPassword').value;
+            if (pw === ADMIN_PASSWORD) {
+                isAdmin = true;
+                closeAdminLogin();
+                document.getElementById('admin-section').classList.remove('hidden');
+                renderAdminHustlers();
+            } else {
+                alert("Incorrect password");
+            }
+        }
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('admin-section').classList.add('hidden');
+            performSearch();
+        }
+
+        // Booking modal (unchanged)
+        const bookingModal = document.getElementById('bookingModal');
         function openBookingModal(hustlerId) {
             const h = allHustlers.find(item => item.id === hustlerId);
             if (!h) return;
-
-            // Handle Image in Modal
             const imgContainer = document.getElementById('modal-img-container');
             if (h.imageUrl) {
                 imgContainer.innerHTML = `<img src="${h.imageUrl}" alt="${h.name}" class="w-full h-full object-cover">`;
             } else {
-                 imgContainer.innerHTML = h.name.charAt(0).toUpperCase();
+                imgContainer.innerHTML = h.name.charAt(0).toUpperCase();
             }
-
             document.getElementById('modal-name').innerText = h.name;
             document.getElementById('modal-category').innerText = h.category;
             document.getElementById('modal-bio').innerText = h.bio;
-            document.getElementById('modal-rate').innerText = h.rate; // Real Rate
-            document.getElementById('modal-location').innerText = h.location; // Real Location
-            
-            // Whatsapp
+            document.getElementById('modal-rate').innerText = h.rate;
+            document.getElementById('modal-location').innerText = h.location;
+
             const message = `Hi ${h.name}, I found you on KasiFix. I need help with...`;
             const waLink = `https://wa.me/${h.phone.replace(/\s/g, '').replace('0', '27')}?text=${encodeURIComponent(message)}`;
             document.getElementById('whatsapp-link').href = waLink;
@@ -620,7 +780,6 @@
             bookingModal.classList.add('flex');
             document.body.classList.add('no-scroll');
         }
-
         function closeBookingModal() {
             bookingModal.classList.add('hidden');
             bookingModal.classList.remove('flex');
@@ -628,12 +787,9 @@
         }
 
         window.onclick = function(event) {
-            if (event.target == bookingModal) {
-                closeBookingModal();
-            }
-            if (event.target == modal) {
-                closeSuccessModal();
-            }
+            if (event.target == bookingModal) closeBookingModal();
+            if (event.target == modal) closeSuccessModal();
+            if (event.target == document.getElementById('adminLoginModal')) closeAdminLogin();
         }
     </script>
 </body>
