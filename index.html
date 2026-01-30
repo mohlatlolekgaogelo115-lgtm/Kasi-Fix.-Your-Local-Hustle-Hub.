@@ -42,6 +42,10 @@
             background: #3b82f6;
             color: white;
         }
+        .toast.warning {
+            background: #f59e0b;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -118,7 +122,6 @@
                             onchange="filterHustlers()"
                         >
                             <option value="all">All Categories</option>
-                            <!-- Options will be populated dynamically -->
                         </select>
                     </div>
                 </div>
@@ -210,15 +213,13 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type} px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center gap-3`;
             toast.innerHTML = `
-                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} text-xl"></i>
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-info-circle'} text-xl"></i>
                 <span>${message}</span>
             `;
             container.appendChild(toast);
 
-            // Trigger animation
             setTimeout(() => toast.classList.add('show'), 100);
 
-            // Auto dismiss after 3.5 seconds
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
@@ -378,21 +379,49 @@
         }
 
         function deleteHustler(id) {
-            if (confirm('Permanently delete this hustler profile? This cannot be undone.')) {
-                db.ref('hustlers/' + id).remove()
-                    .then(() => {
-                        showToast("Hustler profile deleted", "success");
-                    })
-                    .catch(err => {
-                        showToast('Error deleting: ' + err.message, "error");
-                    });
-            }
+            // Modern confirmation toast instead of confirm()
+            showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
+
+            // Create temporary confirmation buttons
+            const container = document.getElementById('toast-container');
+            const confirmToast = document.createElement('div');
+            confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
+            confirmToast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    <span>Confirm deletion?</span>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100" onclick="this.closest('.toast').remove()">Cancel</button>
+                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', this.closest('.toast'))">Delete</button>
+                </div>
+            `;
+            container.appendChild(confirmToast);
+            setTimeout(() => confirmToast.classList.add('show'), 100);
+        }
+
+        // Helper function called when user clicks "Delete" in the toast
+        function confirmDelete(id, toastElement) {
+            db.ref('hustlers/' + id).remove()
+                .then(() => {
+                    showToast("Hustler profile deleted successfully", "success");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                })
+                .catch(err => {
+                    showToast('Error deleting hustler: ' + err.message, "error");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                });
         }
 
         // ── Add Hustler Modal Logic ──────────────────────────────────────────────
         function openAddModal() {
             document.getElementById('add-modal').classList.remove('hidden');
-            // Clear form
             ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image']
                 .forEach(id => document.getElementById(id).value = '');
         }
