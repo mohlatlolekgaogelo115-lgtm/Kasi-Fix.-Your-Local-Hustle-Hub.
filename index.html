@@ -11,9 +11,44 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
+
+        /* Modern toast notification */
+        #toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            max-width: 380px;
+        }
+        .toast {
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 12px;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.success {
+            background: #10b981;
+            color: white;
+        }
+        .toast.error {
+            background: #ef4444;
+            color: white;
+        }
+        .toast.info {
+            background: #3b82f6;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
@@ -41,7 +76,6 @@
                 </div>
             </div>
         </nav>
-
         <div class="max-w-7xl mx-auto px-4 py-12">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
                 <div>
@@ -60,17 +94,16 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Filters (unchanged) -->
+            <!-- Filters -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
                         <div class="relative">
-                            <input 
-                                type="text" 
-                                id="search-input" 
-                                placeholder="Name, phone, location..." 
+                            <input
+                                type="text"
+                                id="search-input"
+                                placeholder="Name, phone, location..."
                                 class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none"
                                 oninput="filterHustlers()"
                             >
@@ -79,8 +112,8 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                        <select 
-                            id="category-filter" 
+                        <select
+                            id="category-filter"
                             class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white"
                             onchange="filterHustlers()"
                         >
@@ -90,9 +123,7 @@
                     </div>
                 </div>
             </div>
-
             <div id="admin-container" class="space-y-6">
-                <!-- Hustlers will be injected here -->
                 <div class="text-center py-20 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
                     <p class="text-lg">Loading applications...</p>
@@ -173,14 +204,36 @@
         let allHustlers = [];
         let filteredHustlers = [];
 
+        // Modern toast function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center gap-3`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} text-xl"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 100);
+
+            // Auto dismiss after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
         function adminLogin() {
             const entered = document.getElementById('admin-password').value;
             if (entered === ADMIN_PASSWORD) {
                 loginScreen.classList.add('hidden');
                 dashboard.classList.remove('hidden');
                 loadHustlers();
+                showToast("Login successful", "success");
             } else {
-                alert("Incorrect password.");
+                showToast("Incorrect password", "error");
             }
         }
 
@@ -188,6 +241,7 @@
             dashboard.classList.add('hidden');
             loginScreen.classList.remove('hidden');
             document.getElementById('admin-password').value = '';
+            showToast("Logged out successfully", "info");
         }
 
         function loadHustlers() {
@@ -229,26 +283,21 @@
         function filterHustlers() {
             const search = document.getElementById('search-input').value.toLowerCase().trim();
             const categoryFilter = document.getElementById('category-filter').value;
-
             filteredHustlers = allHustlers.filter(h => {
-                const matchesSearch = !search || 
+                const matchesSearch = !search ||
                     (h.name || '').toLowerCase().includes(search) ||
                     (h.phone || '').toLowerCase().includes(search) ||
                     (h.location || '').toLowerCase().includes(search) ||
                     (h.category || '').toLowerCase().includes(search);
-
-                const matchesCategory = categoryFilter === 'all' || 
+                const matchesCategory = categoryFilter === 'all' ||
                     (h.category || '').toLowerCase() === categoryFilter;
-
                 return matchesSearch && matchesCategory;
             });
-
             renderAdminHustlers();
         }
 
         function renderAdminHustlers() {
             const hustlersToShow = filteredHustlers;
-
             if (hustlersToShow.length === 0) {
                 if (allHustlers.length === 0) {
                     adminContainer.innerHTML = `
@@ -267,11 +316,9 @@
                 pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
-
             const pending = allHustlers.filter(h => !h.verified).length;
             totalCountEl.textContent = allHustlers.length;
             pendingCountEl.textContent = pending;
-
             adminContainer.innerHTML = '';
             hustlersToShow.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
@@ -282,7 +329,6 @@
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
-
                 const card = `
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="p-6 flex flex-col md:flex-row">
@@ -323,15 +369,23 @@
 
         function toggleVerify(id, makeVerified) {
             db.ref('hustlers/' + id).update({ verified: makeVerified })
-                .then(() => console.log('Status updated'))
-                .catch(err => alert('Error: ' + err.message));
+                .then(() => {
+                    showToast(makeVerified ? "Hustler verified" : "Verification removed", "success");
+                })
+                .catch(err => {
+                    showToast('Error updating status: ' + err.message, "error");
+                });
         }
 
         function deleteHustler(id) {
             if (confirm('Permanently delete this hustler profile? This cannot be undone.')) {
                 db.ref('hustlers/' + id).remove()
-                    .then(() => console.log('Deleted'))
-                    .catch(err => alert('Error: ' + err.message));
+                    .then(() => {
+                        showToast("Hustler profile deleted", "success");
+                    })
+                    .catch(err => {
+                        showToast('Error deleting: ' + err.message, "error");
+                    });
             }
         }
 
@@ -348,12 +402,12 @@
         }
 
         function submitNewHustler() {
-            const name     = document.getElementById('new-name').value.trim();
+            const name = document.getElementById('new-name').value.trim();
             const category = document.getElementById('new-category').value.trim();
-            const phone    = document.getElementById('new-phone').value.trim();
+            const phone = document.getElementById('new-phone').value.trim();
 
             if (!name || !category || !phone) {
-                alert("Please fill in Name, Category, and Phone Number (required fields).");
+                showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
 
@@ -365,17 +419,17 @@
                 rate: document.getElementById('new-rate').value.trim() || null,
                 bio: document.getElementById('new-bio').value.trim() || null,
                 imageUrl: document.getElementById('new-image').value.trim() || null,
-                verified: false,               // default to pending
+                verified: false,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
 
             db.ref('hustlers').push(newHustler)
                 .then(() => {
-                    alert("Hustler added successfully!");
+                    showToast("Hustler added successfully!", "success");
                     closeAddModal();
                 })
                 .catch(err => {
-                    alert("Error adding hustler: " + err.message);
+                    showToast("Error adding hustler: " + err.message, "error");
                 });
         }
     </script>
