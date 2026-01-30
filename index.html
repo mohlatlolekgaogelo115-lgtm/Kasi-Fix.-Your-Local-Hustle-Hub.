@@ -11,6 +11,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .no-scroll { overflow: hidden; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -44,14 +45,23 @@
         </nav>
 
         <div class="max-w-7xl mx-auto px-4 py-12">
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
                     <p class="text-gray-600">Manage and verify new hustler profiles.</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-sm text-gray-500">Total: <span id="total-count">0</span> | Pending: <span id="pending-count">0</span></p>
+                <div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center">
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">Total: <span id="total-count">0</span> | Pending: <span id="pending-count">0</span></p>
+                    </div>
+                    <button onclick="openAddModal()" class="bg-[#f97316] text-white px-6 py-3 rounded-xl font-bold hover:bg-orange-600 transition shadow-md">
+                        Add New Hustler
+                    </button>
                 </div>
+            </div>
+
+            <div class="mb-8">
+                <input type="text" id="admin-search" placeholder="Search by name, phone, category, location, bio..." class="w-full max-w-2xl px-6 py-4 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none text-lg">
             </div>
 
             <div id="admin-container" class="space-y-6">
@@ -64,8 +74,78 @@
         </div>
     </div>
 
+    <!-- Add Hustler Modal -->
+    <div id="addModal" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden items-center justify-center z-[100] backdrop-blur-sm px-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 max-h-screen overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-900">Add New Hustler</h3>
+                <button onclick="closeAddModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa-solid fa-times text-2xl"></i>
+                </button>
+            </div>
+            <form id="addForm" class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="addName" required placeholder="e.g. Sipho Khumalo" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">WhatsApp Number</label>
+                        <input type="tel" id="addPhone" required placeholder="081 234 5678" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">What is your Hustle?</label>
+                        <select id="addCategory" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition bg-white">
+                            <option value="Solar & Inverter Setup">Solar & Inverter Setup</option>
+                            <option value="Plumbing">Plumbing & Leaks</option>
+                            <option value="Car Wash">Mobile Car Wash</option>
+                            <option value="Queue Runner">Queue Runner / Errands</option>
+                            <option value="Barber">Barber / Hair Stylist</option>
+                            <option value="Transport">Bakkie Hire</option>
+                            <option value="General">Other / General Handyman</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Your Location (Kasi)</label>
+                        <input type="text" id="addLocation" required placeholder="e.g. Soweto, Diepkloof" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Hourly Rate (R)</label>
+                    <input type="number" id="addRate" required placeholder="e.g. 250" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Short Bio</label>
+                    <textarea id="addBio" required rows="3" placeholder="I have 5 years experience in..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#f97316] outline-none transition"></textarea>
+                </div>
+                <div class="flex items-center justify-center w-full">
+                    <label for="addFileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                            <i class="fa-solid fa-camera text-gray-400 text-2xl mb-2"></i>
+                            <p id="add-file-label" class="text-sm text-gray-500 font-semibold">Upload Profile Photo</p>
+                        </div>
+                        <input id="addFileInput" type="file" class="hidden" accept="image/*" />
+                    </label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="addVerified" checked class="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500">
+                    <label class="ml-2 text-sm text-gray-700">Verified (show on site immediately)</label>
+                </div>
+                <button type="submit" id="addSubmitBtn" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-extrabold text-lg shadow-lg hover:bg-orange-600 transition-all transform hover:-translate-y-1">
+                    Add Hustler
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Firebase Configuration (same as main site)
+        // Cloudinary Config (same as main site)
+        const CLOUD_NAME = 'dijpvzojr';
+        const UPLOAD_PRESET = 'Root';
+
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -79,7 +159,7 @@
         const db = firebase.database();
 
         // CHANGE THIS TO A STRONG PASSWORD
-        const ADMIN_PASSWORD = "kasifix2024admin";  // <<<--- CHANGE THIS!
+        const ADMIN_PASSWORD = "kasifix2024admin";
 
         const loginScreen = document.getElementById('login-screen');
         const dashboard = document.getElementById('dashboard');
@@ -116,31 +196,63 @@
                             ...snapshot.val()[key]
                         });
                     });
-                    // Sort newest first
                     allHustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 }
                 renderAdminHustlers();
             });
         }
 
+        // Cloudinary upload
+        async function uploadImageToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', UPLOAD_PRESET);
+            try {
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                return data.secure_url;
+            } catch (error) {
+                console.error("Cloudinary upload error:", error);
+                return null;
+            }
+        }
+
+        // Search functionality
+        document.getElementById('admin-search').addEventListener('input', renderAdminHustlers);
+
         function renderAdminHustlers() {
-            if (allHustlers.length === 0) {
+            const searchTerm = document.getElementById('admin-search').value.toLowerCase().trim();
+
+            let displayedHustlers = allHustlers;
+            if (searchTerm) {
+                displayedHustlers = allHustlers.filter(h =>
+                    (h.name || '').toLowerCase().includes(searchTerm) ||
+                    (h.phone || '').toLowerCase().includes(searchTerm) ||
+                    (h.category || '').toLowerCase().includes(searchTerm) ||
+                    (h.location || '').toLowerCase().includes(searchTerm) ||
+                    (h.bio || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            if (displayedHustlers.length === 0) {
                 adminContainer.innerHTML = `
                     <div class="text-center py-20 text-gray-500">
-                        <i class="fa-solid fa-inbox text-6xl mb-4 opacity-50"></i>
-                        <p class="text-lg">No applications yet.</p>
+                        <i class="fa-solid fa-search text-6xl mb-4 opacity-50"></i>
+                        <p class="text-lg">No hustlers found matching your search.</p>
                     </div>`;
-                totalCountEl.textContent = '0';
-                pendingCountEl.textContent = '0';
+                totalCountEl.textContent = allHustlers.length;
+                pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
 
-            const pending = allHustlers.filter(h => !h.verified).length;
             totalCountEl.textContent = allHustlers.length;
-            pendingCountEl.textContent = pending;
+            pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
 
             adminContainer.innerHTML = '';
-            allHustlers.forEach(h => {
+            displayedHustlers.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                 const statusText = h.verified ? 'VERIFIED' : 'PENDING';
@@ -149,7 +261,7 @@
 
                 const imageHtml = h.imageUrl 
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
-                    : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
+                    : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${(h.name || '?').charAt(0).toUpperCase()}</div>`;
 
                 const card = `
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
@@ -200,6 +312,81 @@
                 db.ref('hustlers/' + id).remove()
                     .then(() => console.log('Deleted'))
                     .catch(err => alert('Error: ' + err.message));
+            }
+        }
+
+        // Add Hustler Modal Logic
+        const addModal = document.getElementById('addModal');
+        const addForm = document.getElementById('addForm');
+        const addFileInput = document.getElementById('addFileInput');
+
+        function openAddModal() {
+            addModal.classList.remove('hidden');
+            addModal.classList.add('flex');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeAddModal() {
+            addModal.classList.add('hidden');
+            addModal.classList.remove('flex');
+            document.body.classList.remove('no-scroll');
+            addForm.reset();
+            document.getElementById('add-file-label').innerText = "Upload Profile Photo";
+        }
+
+        addFileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                document.getElementById('add-file-label').innerText = "Selected: " + this.files[0].name;
+            }
+        });
+
+        addForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('addSubmitBtn');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Adding...";
+            submitBtn.disabled = true;
+
+            const name = document.getElementById('addName').value;
+            const phone = document.getElementById('addPhone').value;
+            const category = document.getElementById('addCategory').value;
+            const bio = document.getElementById('addBio').value;
+            const location = document.getElementById('addLocation').value;
+            const rate = document.getElementById('addRate').value;
+            const verified = document.getElementById('addVerified').checked;
+
+            let imageUrl = null;
+            if (addFileInput.files.length > 0) {
+                imageUrl = await uploadImageToCloudinary(addFileInput.files[0]);
+                if (!imageUrl) {
+                    alert("Image upload failed. Please try again.");
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+            }
+
+            const newHustler = {
+                name, phone, category, bio, location, rate,
+                imageUrl, timestamp: Date.now(), verified
+            };
+
+            db.ref('hustlers').push(newHustler)
+                .then(() => {
+                    closeAddModal();
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                })
+                .catch((error) => {
+                    alert('Error adding hustler: ' + error.message);
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                });
+        });
+
+        window.onclick = function(event) {
+            if (event.target == addModal) {
+                closeAddModal();
             }
         }
     </script>
