@@ -11,114 +11,61 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .no-scroll { overflow: hidden; }
-        table { border-collapse: separate; border-spacing: 0; }
-        th { position: sticky; top: 0; background: white; z-index: 10; }
-        tr:hover { background-color: #f9fafb; }
-        .truncate-text { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        @media (max-width: 768px) {
-            .truncate-text { max-width: 120px; }
-        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Simple Password Protection (client-side only – for basic obfuscation) -->
-    <script>
-        const adminPassword = "kasifixadmin2026"; // CHANGE THIS TO SOMETHING STRONG
-        const entered = prompt("Enter Admin Password:");
-        if (entered !== adminPassword) {
-            alert("Access denied.");
-            window.location.href = "about:blank";
-        }
-    </script>
 
-    <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> <span class="text-sm font-medium text-gray-500 ml-2">| Admin Dashboard</span></span>
+    <!-- Login Screen -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
+            <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">Kasi<span class="text-[#f97316]">Fix</span> Admin</h1>
+            <p class="text-gray-600 mb-8">Enter admin password to access the dashboard.</p>
+            <input type="password" id="admin-password" placeholder="Password" class="w-full px-6 py-4 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none text-lg mb-6">
+            <button onclick="adminLogin()" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg">
+                Login
+            </button>
+            <p class="text-xs text-gray-500 mt-4">Change the ADMIN_PASSWORD variable in the script to set your own secure password.</p>
+        </div>
+    </div>
+
+    <!-- Dashboard (hidden until login) -->
+    <div id="dashboard" class="hidden">
+        <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <div class="flex items-center">
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 font-medium">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Logout
+                    </button>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="./index.html" class="text-gray-600 hover:text-blue-900 font-medium">Public Site</a>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
+                    <p class="text-gray-600">Manage and verify new hustler profiles.</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-gray-500">Total: <span id="total-count">0</span> | Pending: <span id="pending-count">0</span></p>
+                </div>
+            </div>
+
+            <div id="admin-container" class="space-y-6">
+                <!-- Hustlers will be injected here -->
+                <div class="text-center py-20 text-gray-500">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
+                    <p class="text-lg">Loading applications...</p>
                 </div>
             </div>
         </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-4 py-12">
-        <div class="mb-8">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p class="text-gray-600">Manage and verify hustler applications.</p>
-        </div>
-
-        <!-- Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Total Hustlers</p>
-                        <p id="total" class="text-3xl font-extrabold text-gray-900">0</p>
-                    </div>
-                    <i class="fa-solid fa-users text-3xl text-blue-600"></i>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Verified</p>
-                        <p id="verified" class="text-3xl font-extrabold text-green-600">0</p>
-                    </div>
-                    <i class="fa-solid fa-check-circle text-3xl text-green-600"></i>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Pending</p>
-                        <p id="pending" class="text-3xl font-extrabold text-orange-600">0</p>
-                    </div>
-                    <i class="fa-solid fa-clock text-3xl text-orange-600"></i>
-                </div>
-            </div>
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-600">Today</p>
-                        <p id="today" class="text-3xl font-extrabold text-gray-900">0</p>
-                    </div>
-                    <i class="fa-solid fa-calendar-day text-3xl text-blue-600"></i>
-                </div>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Photo</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Phone</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Category</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Location</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Rate</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Bio</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Submitted</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-table-body" class="bg-white divide-y divide-gray-200">
-                        <tr><td colspan="10" class="text-center py-12 text-gray-500"><i class="fa-solid fa-circle-notch fa-spin text-2xl"></i> Loading hustlers...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+    </div>
 
     <script>
-        // Firebase Configuration (same as public site)
+        // Firebase Configuration (same as main site)
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -131,82 +78,128 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // CHANGE THIS TO A STRONG PASSWORD
+        const ADMIN_PASSWORD = "kasifix2024admin";  // <<<--- CHANGE THIS!
+
+        const loginScreen = document.getElementById('login-screen');
+        const dashboard = document.getElementById('dashboard');
+        const adminContainer = document.getElementById('admin-container');
+        const totalCountEl = document.getElementById('total-count');
+        const pendingCountEl = document.getElementById('pending-count');
+
         let allHustlers = [];
 
-        // Real-time listener
-        db.ref('hustlers').on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            allHustlers = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-            // Sort newest first
-            allHustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            renderTable();
-            updateStats();
-        });
-
-        function updateStats() {
-            const total = allHustlers.length;
-            const verified = allHustlers.filter(h => h.verified).length;
-            const pending = total - verified;
-
-            const today = new Date().setHours(0,0,0,0);
-            const todayCount = allHustlers.filter(h => h.timestamp && new Date(h.timestamp).setHours(0,0,0,0) === today).length;
-
-            document.getElementById('total').innerText = total;
-            document.getElementById('verified').innerText = verified;
-            document.getElementById('pending').innerText = pending;
-            document.getElementById('today').innerText = todayCount;
+        function adminLogin() {
+            const entered = document.getElementById('admin-password').value;
+            if (entered === ADMIN_PASSWORD) {
+                loginScreen.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                loadHustlers();
+            } else {
+                alert("Incorrect password.");
+            }
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('admin-table-body');
-            if (allHustlers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" class="text-center py-12 text-gray-500">No hustlers registered yet.</td></tr>';
-                return;
-            }
+        function logout() {
+            dashboard.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.getElementById('admin-password').value = '';
+        }
 
-            tbody.innerHTML = '';
-            allHustlers.forEach(h => {
-                const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : '—';
-                const imgHtml = h.imageUrl 
-                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-12 h-12 rounded-xl object-cover border">`
-                    : `<div class="w-12 h-12 bg-gray-200 rounded-xl flex items-center justify-center text-xl font-bold text-gray-600">${h.name.charAt(0).toUpperCase()}</div>`;
-
-                const verifiedChecked = h.verified ? 'checked' : '';
-                const statusText = h.verified ? '<span class="text-green-600 font-medium">Verified</span>' : '<span class="text-orange-600 font-medium">Pending</span>';
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="px-6 py-4">${imgHtml}</td>
-                    <td class="px-6 py-4 font-semibold text-gray-900">${h.name || '—'}</td>
-                    <td class="px-6 py-4">${h.phone || '—'}</td>
-                    <td class="px-6 py-4">${h.category || '—'}</td>
-                    <td class="px-6 py-4">${h.location || '—'}</td>
-                    <td class="px-6 py-4">R${h.rate || '—'}/hr</td>
-                    <td class="px-6 py-4"><span class="truncate-text" title="${h.bio || ''}">${h.bio || '—'}</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-500">${date}</td>
-                    <td class="px-6 py-4">
-                        <label class="flex items-center space-x-3 cursor-pointer">
-                            <input type="checkbox" ${verifiedChecked} onchange="toggleVerified('${h.id}', this.checked)" class="w-5 h-5 text-orange-600 rounded focus:ring-orange-500">
-                            ${statusText}
-                        </label>
-                    </td>
-                    <td class="px-6 py-4">
-                        <button onclick="deleteHustler('${h.id}')" class="bg-red-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-700 transition text-sm">
-                            Delete
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(row);
+        function loadHustlers() {
+            db.ref('hustlers').on('value', (snapshot) => {
+                allHustlers = [];
+                if (snapshot.val()) {
+                    Object.keys(snapshot.val()).forEach(key => {
+                        allHustlers.push({
+                            id: key,
+                            ...snapshot.val()[key]
+                        });
+                    });
+                    // Sort newest first
+                    allHustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+                renderAdminHustlers();
             });
         }
 
-        function toggleVerified(id, checked) {
-            db.ref('hustlers/' + id).update({ verified: checked });
+        function renderAdminHustlers() {
+            if (allHustlers.length === 0) {
+                adminContainer.innerHTML = `
+                    <div class="text-center py-20 text-gray-500">
+                        <i class="fa-solid fa-inbox text-6xl mb-4 opacity-50"></i>
+                        <p class="text-lg">No applications yet.</p>
+                    </div>`;
+                totalCountEl.textContent = '0';
+                pendingCountEl.textContent = '0';
+                return;
+            }
+
+            const pending = allHustlers.filter(h => !h.verified).length;
+            totalCountEl.textContent = allHustlers.length;
+            pendingCountEl.textContent = pending;
+
+            adminContainer.innerHTML = '';
+            allHustlers.forEach(h => {
+                const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
+                const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+                const statusText = h.verified ? 'VERIFIED' : 'PENDING';
+                const verifyBtnText = h.verified ? 'Unverify' : 'Verify';
+                const verifyBtnClass = h.verified ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
+
+                const imageHtml = h.imageUrl 
+                    ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
+                    : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
+
+                const card = `
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                    <div class="p-6 flex flex-col md:flex-row">
+                        <div class="mb-4 md:mb-0 md:mr-8">
+                            ${imageHtml}
+                        </div>
+                        <div class="flex-grow">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h3 class="text-xl font-extrabold text-gray-900">${h.name || 'No name'}</h3>
+                                    <p class="text-[#f97316] font-semibold">${h.category || 'No category'}</p>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-xs font-bold ${statusClass}">
+                                    ${statusText}
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                                <p><i class="fa-solid fa-phone mr-2"></i> ${h.phone || 'No phone'}</p>
+                                <p><i class="fa-solid fa-location-dot mr-2"></i> ${h.location || 'No location'}</p>
+                                <p><i class="fa-solid fa-sack-dollar mr-2"></i> R${h.rate || '0'}/hr</p>
+                                <p><i class="fa-solid fa-calendar mr-2"></i> ${date}</p>
+                            </div>
+                            <p class="text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"><strong>Bio:</strong> ${h.bio || 'No bio provided'}</p>
+                        </div>
+                        <div class="ml-0 md:ml-8 mt-6 md:mt-0 flex flex-row md:flex-col gap-3">
+                            <button onclick="toggleVerify('${h.id}', ${!h.verified})" class="px-6 py-3 rounded-xl text-white font-bold transition ${verifyBtnClass}">
+                                ${verifyBtnText}
+                            </button>
+                            <button onclick="deleteHustler('${h.id}')" class="px-6 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+                adminContainer.innerHTML += card;
+            });
+        }
+
+        function toggleVerify(id, makeVerified) {
+            db.ref('hustlers/' + id).update({ verified: makeVerified })
+                .then(() => console.log('Status updated'))
+                .catch(err => alert('Error: ' + err.message));
         }
 
         function deleteHustler(id) {
-            if (confirm("Permanently delete this hustler? This cannot be undone.")) {
-                db.ref('hustlers/' + id).remove();
+            if (confirm('Permanently delete this hustler profile? This cannot be undone.')) {
+                db.ref('hustlers/' + id).remove()
+                    .then(() => console.log('Deleted'))
+                    .catch(err => alert('Error: ' + err.message));
             }
         }
     </script>
