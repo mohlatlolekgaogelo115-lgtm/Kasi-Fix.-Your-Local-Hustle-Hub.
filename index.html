@@ -14,7 +14,6 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
@@ -44,13 +43,46 @@
         </nav>
 
         <div class="max-w-7xl mx-auto px-4 py-12">
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
                     <p class="text-gray-600">Manage and verify new hustler profiles.</p>
                 </div>
-                <div class="text-right">
-                    <p class="text-sm text-gray-500">Total: <span id="total-count">0</span> | Pending: <span id="pending-count">0</span></p>
+                <div class="text-right whitespace-nowrap">
+                    <p class="text-sm text-gray-500">
+                        Total registered hustlers: <span id="total-count">0</span><br>
+                        Pending applications: <span id="pending-count">0</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                placeholder="Name, phone, location..." 
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none"
+                                oninput="filterHustlers()"
+                            >
+                            <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                        <select 
+                            id="category-filter" 
+                            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none bg-white"
+                            onchange="filterHustlers()"
+                        >
+                            <option value="all">All Categories</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -79,15 +111,15 @@
         const db = firebase.database();
 
         // CHANGE THIS TO A STRONG PASSWORD
-        const ADMIN_PASSWORD = "kasifix2024admin";  // <<<--- CHANGE THIS!
+        const ADMIN_PASSWORD = "kasifix2024admin"; // <<<--- CHANGE THIS!
 
         const loginScreen = document.getElementById('login-screen');
         const dashboard = document.getElementById('dashboard');
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
         const pendingCountEl = document.getElementById('pending-count');
-
         let allHustlers = [];
+        let filteredHustlers = [];
 
         function adminLogin() {
             const entered = document.getElementById('admin-password').value;
@@ -119,19 +151,70 @@
                     // Sort newest first
                     allHustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 }
-                renderAdminHustlers();
+                populateCategoryFilter();
+                filterHustlers(); // will also call render
             });
         }
 
+        function populateCategoryFilter() {
+            const select = document.getElementById('category-filter');
+            const categories = new Set();
+            allHustlers.forEach(h => {
+                if (h.category && h.category.trim()) {
+                    categories.add(h.category.trim());
+                }
+            });
+            // Clear existing options except "All"
+            while (select.options.length > 1) {
+                select.remove(1);
+            }
+            [...categories].sort().forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.toLowerCase();
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        function filterHustlers() {
+            const search = document.getElementById('search-input').value.toLowerCase().trim();
+            const categoryFilter = document.getElementById('category-filter').value;
+
+            filteredHustlers = allHustlers.filter(h => {
+                const matchesSearch = !search || 
+                    (h.name || '').toLowerCase().includes(search) ||
+                    (h.phone || '').toLowerCase().includes(search) ||
+                    (h.location || '').toLowerCase().includes(search) ||
+                    (h.category || '').toLowerCase().includes(search);
+
+                const matchesCategory = categoryFilter === 'all' || 
+                    (h.category || '').toLowerCase() === categoryFilter;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            renderAdminHustlers();
+        }
+
         function renderAdminHustlers() {
-            if (allHustlers.length === 0) {
-                adminContainer.innerHTML = `
-                    <div class="text-center py-20 text-gray-500">
-                        <i class="fa-solid fa-inbox text-6xl mb-4 opacity-50"></i>
-                        <p class="text-lg">No applications yet.</p>
-                    </div>`;
-                totalCountEl.textContent = '0';
-                pendingCountEl.textContent = '0';
+            const hustlersToShow = filteredHustlers;
+
+            if (hustlersToShow.length === 0) {
+                if (allHustlers.length === 0) {
+                    adminContainer.innerHTML = `
+                        <div class="text-center py-20 text-gray-500">
+                            <i class="fa-solid fa-inbox text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">No applications yet.</p>
+                        </div>`;
+                } else {
+                    adminContainer.innerHTML = `
+                        <div class="text-center py-20 text-gray-500">
+                            <i class="fa-solid fa-filter text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">No hustlers match your filters.</p>
+                        </div>`;
+                }
+                totalCountEl.textContent = allHustlers.length;
+                pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
 
@@ -140,14 +223,13 @@
             pendingCountEl.textContent = pending;
 
             adminContainer.innerHTML = '';
-            allHustlers.forEach(h => {
+            hustlersToShow.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                 const statusText = h.verified ? 'VERIFIED' : 'PENDING';
                 const verifyBtnText = h.verified ? 'Unverify' : 'Verify';
                 const verifyBtnClass = h.verified ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
-
-                const imageHtml = h.imageUrl 
+                const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
 
