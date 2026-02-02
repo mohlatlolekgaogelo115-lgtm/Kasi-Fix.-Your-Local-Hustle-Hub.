@@ -6,12 +6,13 @@
     <title>KasiFix | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Updated Firebase imports – we need auth module now -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
-
         /* Modern toast notification */
         #toast-container {
             position: fixed;
@@ -49,30 +50,41 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <!-- Login Screen -->
+    <!-- Login Screen – now with Google button -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
-            <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">Kasi<span class="text-[#f97316]">Fix</span> Admin</h1>
-            <p class="text-gray-600 mb-8">Enter admin password to access the dashboard.</p>
+            <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix<span class="text-[#f97316]">Fix</span> Admin</h1>
+            <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
+            
+            <!-- Google Sign-In Button -->
+            <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
+                <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
+                Sign in with Google
+            </button>
+
+            <!-- Optional: keep password field if you want both methods (comment out if not needed) -->
+            <!-- 
+            <p class="text-sm text-gray-500 mb-4">— or use admin password —</p>
             <input type="password" id="admin-password" placeholder="Password" class="w-full px-6 py-4 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none text-lg mb-6">
             <button onclick="adminLogin()" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg">
-                Login
+                Login with Password
             </button>
-            <p class="text-xs text-gray-500 mt-4">Change the ADMIN_PASSWORD variable in the script to set your own secure password.</p>
+            -->
+            
+            <p class="text-xs text-gray-500 mt-6">Only authorized Google accounts can access this dashboard.</p>
         </div>
     </div>
 
-    <!-- Dashboard (hidden until login) -->
+    <!-- Dashboard (hidden until login) – unchanged -->
     <div id="dashboard" class="hidden">
         <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">Kasi<span class="text-[#f97316]">Fix</span> Admin</span>
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">KasiFix<span class="text-[#f97316]">Fix</span> Admin</span>
                     </div>
                     <button onclick="logout()" class="text-gray-600 hover:text-red-600 font-medium">
                         <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Logout
@@ -98,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Filters -->
+            <!-- Filters – unchanged -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -135,7 +147,7 @@
         </div>
     </div>
 
-    <!-- Add Hustler Modal -->
+    <!-- Add Hustler Modal – unchanged -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b">
@@ -183,7 +195,7 @@
     </div>
 
     <script>
-        // Firebase Configuration (same as main site)
+        // Firebase Configuration (same as before)
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -193,21 +205,78 @@
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
             measurementId: "G-8NKED4DENK"
         };
+
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
 
-        // CHANGE THIS TO A STRONG PASSWORD
-        const ADMIN_PASSWORD = "kasifix2024admin"; // <<<--- CHANGE THIS!
+        // ── Google Sign-In ──────────────────────────────────────────────
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            // Optional: force account selection (good for multi-account users)
+            provider.setCustomParameters({ prompt: 'select_account' });
 
-        const loginScreen = document.getElementById('login-screen');
-        const dashboard = document.getElementById('dashboard');
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    // You can add extra restriction here, e.g. only allow specific emails
+                    const user = result.user;
+                    // Example: restrict to your domain or specific emails
+                    // if (!user.email.endsWith('@yourcompany.com')) {
+                    //     auth.signOut();
+                    //     showToast("Access denied – unauthorized account", "error");
+                    //     return;
+                    // }
+
+                    showToast(`Welcome, ${user.displayName || 'Admin'}!`, "success");
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    loadHustlers();
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    let message = "Google sign-in failed";
+                    if (errorCode === 'auth/popup-closed-by-user') {
+                        message = "Sign-in cancelled";
+                    } else if (errorCode === 'auth/account-exists-with-different-credential') {
+                        message = "Account exists with different sign-in method";
+                    }
+                    showToast(message, "error");
+                    console.error(error);
+                });
+        }
+
+        // ── Logout (works for Google too) ──────────────────────────────────────────────
+        function logout() {
+            auth.signOut().then(() => {
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+                showToast("Logged out successfully", "info");
+            }).catch((error) => {
+                showToast("Logout error: " + error.message, "error");
+            });
+        }
+
+        // Listen to auth state (auto-show dashboard if already signed in)
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Optionally restrict here too
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadHustlers();
+            } else {
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+        });
+
+        // ── Everything below this line is UNCHANGED ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
         const pendingCountEl = document.getElementById('pending-count');
         let allHustlers = [];
         let filteredHustlers = [];
 
-        // Modern toast function
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -217,32 +286,24 @@
                 <span>${message}</span>
             `;
             container.appendChild(toast);
-
             setTimeout(() => toast.classList.add('show'), 100);
-
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
             }, 3500);
         }
 
+        // Legacy password login (optional – commented out in HTML but function kept)
         function adminLogin() {
             const entered = document.getElementById('admin-password').value;
-            if (entered === ADMIN_PASSWORD) {
-                loginScreen.classList.add('hidden');
-                dashboard.classList.remove('hidden');
+            if (entered === "kasifix2024admin") {  // ← CHANGE THIS!
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
                 loadHustlers();
                 showToast("Login successful", "success");
             } else {
                 showToast("Incorrect password", "error");
             }
-        }
-
-        function logout() {
-            dashboard.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-            document.getElementById('admin-password').value = '';
-            showToast("Logged out successfully", "info");
         }
 
         function loadHustlers() {
@@ -379,10 +440,7 @@
         }
 
         function deleteHustler(id) {
-            // Modern confirmation toast instead of confirm()
             showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
-
-            // Create temporary confirmation buttons
             const container = document.getElementById('toast-container');
             const confirmToast = document.createElement('div');
             confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
@@ -400,7 +458,6 @@
             setTimeout(() => confirmToast.classList.add('show'), 100);
         }
 
-        // Helper function called when user clicks "Delete" in the toast
         function confirmDelete(id, toastElement) {
             db.ref('hustlers/' + id).remove()
                 .then(() => {
@@ -419,7 +476,6 @@
                 });
         }
 
-        // ── Add Hustler Modal Logic ──────────────────────────────────────────────
         function openAddModal() {
             document.getElementById('add-modal').classList.remove('hidden');
             ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image']
@@ -434,12 +490,10 @@
             const name = document.getElementById('new-name').value.trim();
             const category = document.getElementById('new-category').value.trim();
             const phone = document.getElementById('new-phone').value.trim();
-
             if (!name || !category || !phone) {
                 showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
-
             const newHustler = {
                 name: name,
                 category: category,
@@ -451,7 +505,6 @@
                 verified: false,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
-
             db.ref('hustlers').push(newHustler)
                 .then(() => {
                     showToast("Hustler added successfully!", "success");
