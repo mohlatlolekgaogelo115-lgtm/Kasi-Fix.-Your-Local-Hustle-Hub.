@@ -6,10 +6,50 @@
     <title>KasiFix | Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Updated Firebase imports – we need auth module now -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+    <!-- Modular Firebase v10+ imports -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+        import { 
+            getAuth, 
+            GoogleAuthProvider, 
+            signInWithPopup, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+        import { 
+            getDatabase, 
+            ref, 
+            onValue, 
+            update, 
+            remove, 
+            push, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+        // ── Make these available globally (since rest of script is not module) ──
+        window.firebaseApp = initializeApp({
+            apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
+            authDomain: "kasifix-5b102.firebaseapp.com",
+            projectId: "kasifix-5b102",
+            storageBucket: "kasifix-5b102.firebasestorage.app",
+            messagingSenderId: "800882399249",
+            appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
+            measurementId: "G-8NKED4DENK"
+        });
+
+        window.auth = getAuth(window.firebaseApp);
+        window.db   = getDatabase(window.firebaseApp);
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.signInWithPopup    = signInWithPopup;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut            = signOut;
+        window.ref                = ref;
+        window.onValue            = onValue;
+        window.update             = update;
+        window.remove             = remove;
+        window.push               = push;
+        window.serverTimestamp    = serverTimestamp;
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -53,32 +93,23 @@
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <!-- Login Screen – now with Google button -->
+    <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
             <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix<span class="text-[#f97316]">Fix</span> Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
-            
+           
             <!-- Google Sign-In Button -->
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
                 <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
                 Sign in with Google
             </button>
-
-            <!-- Optional: keep password field if you want both methods (comment out if not needed) -->
-            <!-- 
-            <p class="text-sm text-gray-500 mb-4">— or use admin password —</p>
-            <input type="password" id="admin-password" placeholder="Password" class="w-full px-6 py-4 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none text-lg mb-6">
-            <button onclick="adminLogin()" class="w-full bg-[#f97316] text-white py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition shadow-lg">
-                Login with Password
-            </button>
-            -->
-            
+           
             <p class="text-xs text-gray-500 mt-6">Only authorized Google accounts can access this dashboard.</p>
         </div>
     </div>
 
-    <!-- Dashboard (hidden until login) – unchanged -->
+    <!-- Dashboard -->
     <div id="dashboard" class="hidden">
         <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -110,7 +141,8 @@
                     </div>
                 </div>
             </div>
-            <!-- Filters – unchanged -->
+
+            <!-- Filters -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -138,6 +170,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="admin-container" class="space-y-6">
                 <div class="text-center py-20 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
@@ -147,7 +180,7 @@
         </div>
     </div>
 
-    <!-- Add Hustler Modal – unchanged -->
+    <!-- Add Hustler Modal -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b">
@@ -195,35 +228,22 @@
     </div>
 
     <script>
-        // Firebase Configuration (same as before)
-        const firebaseConfig = {
-            apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
-            authDomain: "kasifix-5b102.firebaseapp.com",
-            projectId: "kasifix-5b102",
-            storageBucket: "kasifix-5b102.firebasestorage.app",
-            messagingSenderId: "800882399249",
-            appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
-            measurementId: "G-8NKED4DENK"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
+        const auth = window.auth;
+        const db   = window.db;
 
         // ── Google Sign-In ──────────────────────────────────────────────
         function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            // Optional: force account selection (good for multi-account users)
+            const provider = new window.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
 
-            auth.signInWithPopup(provider)
+            window.signInWithPopup(auth, provider)
                 .then((result) => {
-                    // You can add extra restriction here, e.g. only allow specific emails
                     const user = result.user;
-                    // Example: restrict to your domain or specific emails
-                    // if (!user.email.endsWith('@yourcompany.com')) {
-                    //     auth.signOut();
+
+                    // Optional: restrict domains (uncomment & customize)
+                    // const allowed = ["gmail.com", "yourcompany.com"];
+                    // if (!allowed.some(d => user.email?.toLowerCase().endsWith("@" + d))) {
+                    //     window.signOut(auth);
                     //     showToast("Access denied – unauthorized account", "error");
                     //     return;
                     // }
@@ -234,11 +254,10 @@
                     loadHustlers();
                 })
                 .catch((error) => {
-                    const errorCode = error.code;
                     let message = "Google sign-in failed";
-                    if (errorCode === 'auth/popup-closed-by-user') {
+                    if (error.code === 'auth/popup-closed-by-user') {
                         message = "Sign-in cancelled";
-                    } else if (errorCode === 'auth/account-exists-with-different-credential') {
+                    } else if (error.code === 'auth/account-exists-with-different-credential') {
                         message = "Account exists with different sign-in method";
                     }
                     showToast(message, "error");
@@ -246,9 +265,9 @@
                 });
         }
 
-        // ── Logout (works for Google too) ──────────────────────────────────────────────
+        // ── Logout ──────────────────────────────────────────────
         function logout() {
-            auth.signOut().then(() => {
+            window.signOut(auth).then(() => {
                 document.getElementById('dashboard').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
                 showToast("Logged out successfully", "info");
@@ -257,10 +276,9 @@
             });
         }
 
-        // Listen to auth state (auto-show dashboard if already signed in)
-        auth.onAuthStateChanged((user) => {
+        // Auth state listener
+        window.onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Optionally restrict here too
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
                 loadHustlers();
@@ -270,7 +288,7 @@
             }
         });
 
-        // ── Everything below this line is UNCHANGED ──────────────────────────────────────────────
+        // ── Rest of your original logic (with minor safety fixes) ──
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
         const pendingCountEl = document.getElementById('pending-count');
@@ -293,21 +311,8 @@
             }, 3500);
         }
 
-        // Legacy password login (optional – commented out in HTML but function kept)
-        function adminLogin() {
-            const entered = document.getElementById('admin-password').value;
-            if (entered === "kasifix2024admin") {  // ← CHANGE THIS!
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                loadHustlers();
-                showToast("Login successful", "success");
-            } else {
-                showToast("Incorrect password", "error");
-            }
-        }
-
         function loadHustlers() {
-            db.ref('hustlers').on('value', (snapshot) => {
+            window.onValue(window.ref(window.db, 'hustlers'), (snapshot) => {
                 allHustlers = [];
                 if (snapshot.val()) {
                     Object.keys(snapshot.val()).forEach(key => {
@@ -345,21 +350,24 @@
         function filterHustlers() {
             const search = document.getElementById('search-input').value.toLowerCase().trim();
             const categoryFilter = document.getElementById('category-filter').value;
+
             filteredHustlers = allHustlers.filter(h => {
                 const matchesSearch = !search ||
-                    (h.name || '').toLowerCase().includes(search) ||
-                    (h.phone || '').toLowerCase().includes(search) ||
+                    (h.name   || '').toLowerCase().includes(search) ||
+                    (h.phone  || '').toLowerCase().includes(search) ||
                     (h.location || '').toLowerCase().includes(search) ||
                     (h.category || '').toLowerCase().includes(search);
                 const matchesCategory = categoryFilter === 'all' ||
                     (h.category || '').toLowerCase() === categoryFilter;
                 return matchesSearch && matchesCategory;
             });
+
             renderAdminHustlers();
         }
 
         function renderAdminHustlers() {
             const hustlersToShow = filteredHustlers;
+
             if (hustlersToShow.length === 0) {
                 if (allHustlers.length === 0) {
                     adminContainer.innerHTML = `
@@ -378,19 +386,28 @@
                 pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
-            const pending = allHustlers.filter(h => !h.verified).length;
+
             totalCountEl.textContent = allHustlers.length;
-            pendingCountEl.textContent = pending;
+            pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
+
             adminContainer.innerHTML = '';
+
             hustlersToShow.forEach(h => {
-                const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
+                const date = h.timestamp 
+                    ? new Date(h.timestamp).toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' }) 
+                    : '—';
+
+                const rateDisplay = h.rate ? `R${Number(h.rate).toLocaleString('en-ZA')}/hr` : '—';
+
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
-                const statusText = h.verified ? 'VERIFIED' : 'PENDING';
+                const statusText  = h.verified ? 'VERIFIED' : 'PENDING';
                 const verifyBtnText = h.verified ? 'Unverify' : 'Verify';
                 const verifyBtnClass = h.verified ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
+
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
-                    : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
+                    : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${(h.name || '?').charAt(0).toUpperCase()}</div>`;
+
                 const card = `
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="p-6 flex flex-col md:flex-row">
@@ -410,7 +427,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
                                 <p><i class="fa-solid fa-phone mr-2"></i> ${h.phone || 'No phone'}</p>
                                 <p><i class="fa-solid fa-location-dot mr-2"></i> ${h.location || 'No location'}</p>
-                                <p><i class="fa-solid fa-sack-dollar mr-2"></i> R${h.rate || '0'}/hr</p>
+                                <p><i class="fa-solid fa-sack-dollar mr-2"></i> ${rateDisplay}</p>
                                 <p><i class="fa-solid fa-calendar mr-2"></i> ${date}</p>
                             </div>
                             <p class="text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"><strong>Bio:</strong> ${h.bio || 'No bio provided'}</p>
@@ -430,7 +447,7 @@
         }
 
         function toggleVerify(id, makeVerified) {
-            db.ref('hustlers/' + id).update({ verified: makeVerified })
+            window.update(window.ref(window.db, 'hustlers/' + id), { verified: makeVerified })
                 .then(() => {
                     showToast(makeVerified ? "Hustler verified" : "Verification removed", "success");
                 })
@@ -440,39 +457,16 @@
         }
 
         function deleteHustler(id) {
-            showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
-            const container = document.getElementById('toast-container');
-            const confirmToast = document.createElement('div');
-            confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
-            confirmToast.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
-                    <span>Confirm deletion?</span>
-                </div>
-                <div class="flex gap-3">
-                    <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100" onclick="this.closest('.toast').remove()">Cancel</button>
-                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', this.closest('.toast'))">Delete</button>
-                </div>
-            `;
-            container.appendChild(confirmToast);
-            setTimeout(() => confirmToast.classList.add('show'), 100);
-        }
+            if (!confirm("Are you sure you want to permanently delete this hustler?\nThis action cannot be undone.")) {
+                return;
+            }
 
-        function confirmDelete(id, toastElement) {
-            db.ref('hustlers/' + id).remove()
+            window.remove(window.ref(window.db, 'hustlers/' + id))
                 .then(() => {
                     showToast("Hustler profile deleted successfully", "success");
-                    if (toastElement) {
-                        toastElement.classList.remove('show');
-                        setTimeout(() => toastElement.remove(), 400);
-                    }
                 })
                 .catch(err => {
                     showToast('Error deleting hustler: ' + err.message, "error");
-                    if (toastElement) {
-                        toastElement.classList.remove('show');
-                        setTimeout(() => toastElement.remove(), 400);
-                    }
                 });
         }
 
@@ -487,13 +481,15 @@
         }
 
         function submitNewHustler() {
-            const name = document.getElementById('new-name').value.trim();
+            const name     = document.getElementById('new-name').value.trim();
             const category = document.getElementById('new-category').value.trim();
-            const phone = document.getElementById('new-phone').value.trim();
+            const phone    = document.getElementById('new-phone').value.trim();
+
             if (!name || !category || !phone) {
                 showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
+
             const newHustler = {
                 name: name,
                 category: category,
@@ -503,9 +499,10 @@
                 bio: document.getElementById('new-bio').value.trim() || null,
                 imageUrl: document.getElementById('new-image').value.trim() || null,
                 verified: false,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+                timestamp: window.serverTimestamp()
             };
-            db.ref('hustlers').push(newHustler)
+
+            window.push(window.ref(window.db, 'hustlers'), newHustler)
                 .then(() => {
                     showToast("Hustler added successfully!", "success");
                     closeAddModal();
