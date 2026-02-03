@@ -67,12 +67,13 @@
 <body class="min-h-screen transition-colors duration-300">
     <!-- Toast Container -->
     <div id="toast-container"></div>
+
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
             <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
-          
+         
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
                 <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
                 Sign in with Google
@@ -80,6 +81,7 @@
             <p class="text-xs text-gray-500 mt-6">Only authorized Google accounts can access this dashboard.</p>
         </div>
     </div>
+
     <!-- Dashboard -->
     <div id="dashboard" class="hidden">
         <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
@@ -99,6 +101,7 @@
                 </div>
             </div>
         </nav>
+
         <div class="max-w-7xl mx-auto px-4 py-12">
             <!-- Stats Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -119,6 +122,7 @@
                     <p id="stat-avg-rate" class="text-3xl font-bold text-[#f97316] mt-1">R0</p>
                 </div>
             </div>
+
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
@@ -136,6 +140,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Filters -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,6 +159,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="admin-container" class="space-y-6">
                 <div class="text-center py-20 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
@@ -162,6 +168,7 @@
             </div>
         </div>
     </div>
+
     <!-- Add Hustler Modal -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -204,6 +211,51 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Hustler Modal -->
+    <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b">
+                <h3 class="text-2xl font-bold text-gray-900">Edit Hustler</h3>
+            </div>
+            <div class="p-6 space-y-5">
+                <input type="hidden" id="edit-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                    <input type="text" id="edit-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+                    <input type="text" id="edit-category" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                    <input type="tel" id="edit-phone" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input type="text" id="edit-location" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Hourly Rate (R)</label>
+                    <input type="number" id="edit-rate" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                    <textarea id="edit-bio" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Profile Image URL (optional)</label>
+                    <input type="url" id="edit-image" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-[#f97316] outline-none">
+                </div>
+            </div>
+            <div class="p-6 border-t flex justify-end gap-4">
+                <button onclick="closeEditModal()" class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition">Cancel</button>
+                <button onclick="submitEditedHustler()" class="px-6 py-3 rounded-xl bg-[#1e3a8a] text-white font-bold hover:bg-blue-900 transition">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ── Dark Mode Toggle ────────────────────────────────────────
         function toggleDarkMode() {
@@ -214,11 +266,13 @@
                 : 'fa-solid fa-moon';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
+
         if (localStorage.getItem('theme') === 'dark' ||
             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.getElementById('theme-icon').className = 'fa-solid fa-sun';
         }
+
         // ── Firebase ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
@@ -229,9 +283,11 @@
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
             measurementId: "G-8NKED4DENK"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
+
         // ── Auth ────────────────────────────────────────────────────
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -251,6 +307,7 @@
                     console.error(error);
                 });
         }
+
         function logout() {
             auth.signOut().then(() => {
                 document.getElementById('dashboard').classList.add('hidden');
@@ -260,6 +317,7 @@
                 showToast("Logout error: " + error.message, "error");
             });
         }
+
         auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('login-screen').classList.add('hidden');
@@ -270,6 +328,7 @@
                 document.getElementById('login-screen').classList.remove('hidden');
             }
         });
+
         // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
@@ -278,8 +337,10 @@
         const statPendingEl = document.getElementById('stat-pending');
         const statVerifiedEl = document.getElementById('stat-verified');
         const statAvgRateEl = document.getElementById('stat-avg-rate');
+
         let allHustlers = [];
         let filteredHustlers = [];
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -295,6 +356,7 @@
                 setTimeout(() => toast.remove(), 400);
             }, 3500);
         }
+
         function loadHustlers() {
             db.ref('hustlers').on('value', (snapshot) => {
                 allHustlers = [];
@@ -312,17 +374,20 @@
                 filterHustlers();
             });
         }
+
         function updateStats() {
             const total = allHustlers.length;
             const pending = allHustlers.filter(h => !h.verified).length;
             const verified = total - pending;
             const rates = allHustlers.map(h => Number(h.rate || 0)).filter(r => r > 0);
             const avgRate = rates.length > 0 ? (rates.reduce((a,b)=>a+b,0) / rates.length).toFixed(0) : 0;
+
             statTotalEl.textContent = total;
             statPendingEl.textContent = pending;
             statVerifiedEl.textContent = verified;
             statAvgRateEl.textContent = `R${avgRate}`;
         }
+
         function populateCategoryFilter() {
             const select = document.getElementById('category-filter');
             const categories = new Set();
@@ -337,9 +402,11 @@
                 select.appendChild(opt);
             });
         }
+
         function filterHustlers() {
             const search = document.getElementById('search-input').value.toLowerCase().trim();
             const categoryFilter = document.getElementById('category-filter').value;
+
             filteredHustlers = allHustlers.filter(h => {
                 const matchesSearch = !search ||
                     (h.name || '').toLowerCase().includes(search) ||
@@ -350,10 +417,13 @@
                     (h.category || '').toLowerCase() === categoryFilter;
                 return matchesSearch && matchesCategory;
             });
+
             renderAdminHustlers();
         }
+
         function renderAdminHustlers() {
             const hustlersToShow = filteredHustlers;
+
             if (hustlersToShow.length === 0) {
                 if (allHustlers.length === 0) {
                     adminContainer.innerHTML = `
@@ -372,19 +442,24 @@
                 pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
+
             const pending = allHustlers.filter(h => !h.verified).length;
             totalCountEl.textContent = allHustlers.length;
             pendingCountEl.textContent = pending;
+
             adminContainer.innerHTML = '';
+
             hustlersToShow.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                 const statusText = h.verified ? 'VERIFIED' : 'PENDING';
                 const verifyBtnText = h.verified ? 'Unverify' : 'Verify';
                 const verifyBtnClass = h.verified ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
+
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
+
                 const card = `
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="p-6 flex flex-col md:flex-row">
@@ -413,15 +488,21 @@
                             <button onclick="toggleVerify('${h.id}', ${!h.verified})" class="px-6 py-3 rounded-xl text-white font-bold transition ${verifyBtnClass}">
                                 ${verifyBtnText}
                             </button>
+                            <button onclick="openEditModal({id: '${h.id}', name: \`${(h.name || '').replace(/`/g,'\\`')}\`, category: \`${(h.category || '').replace(/`/g,'\\`')}\`, phone: \`${(h.phone || '').replace(/`/g,'\\`')}\`, location: \`${(h.location || '').replace(/`/g,'\\`')}\`, rate: '${h.rate || ''}', bio: \`${(h.bio || '').replace(/`/g,'\\`')}\`, imageUrl: \`${(h.imageUrl || '').replace(/`/g,'\\`')}\`})" 
+                                    class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition">
+                                Edit
+                            </button>
                             <button onclick="deleteHustler('${h.id}')" class="px-6 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition">
                                 Delete
                             </button>
                         </div>
                     </div>
                 </div>`;
+
                 adminContainer.innerHTML += card;
             });
         }
+
         function toggleVerify(id, makeVerified) {
             db.ref('hustlers/' + id).update({ verified: makeVerified })
                 .then(() => {
@@ -431,8 +512,10 @@
                     showToast('Error updating status: ' + err.message, "error");
                 });
         }
+
         function deleteHustler(id) {
             showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
+
             const container = document.getElementById('toast-container');
             const confirmToast = document.createElement('div');
             confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
@@ -449,6 +532,7 @@
             container.appendChild(confirmToast);
             setTimeout(() => confirmToast.classList.add('show'), 100);
         }
+
         function confirmDelete(id, toastElement) {
             db.ref('hustlers/' + id).remove()
                 .then(() => {
@@ -466,22 +550,28 @@
                     }
                 });
         }
+
+        // ── Add Modal ───────────────────────────────────────────────
         function openAddModal() {
             document.getElementById('add-modal').classList.remove('hidden');
             ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image']
                 .forEach(id => document.getElementById(id).value = '');
         }
+
         function closeAddModal() {
             document.getElementById('add-modal').classList.add('hidden');
         }
+
         function submitNewHustler() {
             const name = document.getElementById('new-name').value.trim();
             const category = document.getElementById('new-category').value.trim();
             const phone = document.getElementById('new-phone').value.trim();
+
             if (!name || !category || !phone) {
                 showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
+
             const newHustler = {
                 name: name,
                 category: category,
@@ -493,6 +583,7 @@
                 verified: false,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
+
             db.ref('hustlers').push(newHustler)
                 .then(() => {
                     showToast("Hustler added successfully!", "success");
@@ -500,6 +591,59 @@
                 })
                 .catch(err => {
                     showToast("Error adding hustler: " + err.message, "error");
+                });
+        }
+
+        // ── Edit Modal ──────────────────────────────────────────────
+        function openEditModal(hustler) {
+            document.getElementById('edit-id').value = hustler.id;
+            document.getElementById('edit-name').value = hustler.name || '';
+            document.getElementById('edit-category').value = hustler.category || '';
+            document.getElementById('edit-phone').value = hustler.phone || '';
+            document.getElementById('edit-location').value = hustler.location || '';
+            document.getElementById('edit-rate').value = hustler.rate || '';
+            document.getElementById('edit-bio').value = hustler.bio || '';
+            document.getElementById('edit-image').value = hustler.imageUrl || '';
+            
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        function submitEditedHustler() {
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value.trim();
+            const category = document.getElementById('edit-category').value.trim();
+            const phone = document.getElementById('edit-phone').value.trim();
+
+            if (!name || !category || !phone) {
+                showToast("Name, Category, and Phone Number are required", "error");
+                return;
+            }
+
+            const current = allHustlers.find(h => h.id === id) || {};
+
+            const updatedHustler = {
+                name: name,
+                category: category,
+                phone: phone,
+                location: document.getElementById('edit-location').value.trim() || null,
+                rate: document.getElementById('edit-rate').value.trim() || null,
+                bio: document.getElementById('edit-bio').value.trim() || null,
+                imageUrl: document.getElementById('edit-image').value.trim() || null,
+                verified: current.verified || false,
+                timestamp: current.timestamp || firebase.database.ServerValue.TIMESTAMP
+            };
+
+            db.ref('hustlers/' + id).update(updatedHustler)
+                .then(() => {
+                    showToast("Hustler updated successfully!", "success");
+                    closeEditModal();
+                })
+                .catch(err => {
+                    showToast("Error updating hustler: " + err.message, "error");
                 });
         }
     </script>
