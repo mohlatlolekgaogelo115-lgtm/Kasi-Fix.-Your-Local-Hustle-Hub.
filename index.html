@@ -485,14 +485,16 @@
                             <p class="text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"><strong>Bio:</strong> ${h.bio || 'No bio provided'}</p>
                         </div>
                         <div class="ml-0 md:ml-8 mt-6 md:mt-0 flex flex-row md:flex-col gap-3">
-                            <button onclick="toggleVerify('${h.id}', ${!h.verified})" class="px-6 py-3 rounded-xl text-white font-bold transition ${verifyBtnClass}">
+                            <button onclick="toggleVerify('${h.id}', ${!h.verified})" 
+                                    class="px-6 py-3 rounded-full text-white font-bold transition ${verifyBtnClass} border border-black/80 min-w-[110px]">
                                 ${verifyBtnText}
                             </button>
                             <button onclick="openEditModal({id: '${h.id}', name: \`${(h.name || '').replace(/`/g,'\\`')}\`, category: \`${(h.category || '').replace(/`/g,'\\`')}\`, phone: \`${(h.phone || '').replace(/`/g,'\\`')}\`, location: \`${(h.location || '').replace(/`/g,'\\`')}\`, rate: '${h.rate || ''}', bio: \`${(h.bio || '').replace(/`/g,'\\`')}\`, imageUrl: \`${(h.imageUrl || '').replace(/`/g,'\\`')}\`})" 
-                                    class="px-6 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 transition">
+                                    class="px-6 py-3 rounded-full bg-blue-600 text-white font-bold hover:bg-blue-700 transition border border-black/80 min-w-[110px]">
                                 Edit
                             </button>
-                            <button onclick="deleteHustler('${h.id}')" class="px-6 py-3 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700 transition">
+                            <button onclick="deleteHustler('${h.id}')" 
+                                    class="px-6 py-3 rounded-full bg-red-600 text-white font-bold hover:bg-red-700 transition border border-black/80 min-w-[110px]">
                                 Delete
                             </button>
                         </div>
