@@ -73,7 +73,7 @@
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
-            <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix<span class="text-[#f97316]">Fix</span> Admin</h1>
+            <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
            
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
@@ -91,7 +91,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16 items-center">
                     <div class="flex items-center">
-                        <span class="text-2xl font-extrabold text-[#1e3a8a]">KasiFix<span class="text-[#f97316]">Fix</span> Admin</span>
+                        <span class="text-2xl font-extrabold text-[#1e3a8a]">KasiFix Admin</span>
                     </div>
                     <div class="flex items-center gap-6">
                         <button onclick="toggleDarkMode()" class="text-gray-600 hover:text-gray-900 text-xl" title="Toggle dark mode">
@@ -106,7 +106,7 @@
         </nav>
 
         <div class="max-w-7xl mx-auto px-4 py-12">
-            <!-- New Stats Section -->
+            <!-- Stats Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
                     <p class="text-sm text-gray-500">Total Hustlers</p>
@@ -172,7 +172,7 @@
         </div>
     </div>
 
-    <!-- Add Hustler Modal (unchanged) -->
+    <!-- Add Hustler Modal -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b">
@@ -226,14 +226,13 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
-        // Load saved theme
         if (localStorage.getItem('theme') === 'dark' || 
             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.getElementById('theme-icon').className = 'fa-solid fa-sun';
         }
 
-        // ── Firebase (unchanged) ────────────────────────────────────
+        // ── Firebase ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -247,7 +246,7 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
-        // ── Auth logic (unchanged) ──────────────────────────────────
+        // ── Auth ────────────────────────────────────────────────────
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
@@ -288,12 +287,10 @@
             }
         });
 
-        // ── Core logic (with stats added) ───────────────────────────
+        // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl   = document.getElementById('total-count');
         const pendingCountEl = document.getElementById('pending-count');
-
-        // New stat elements
         const statTotalEl    = document.getElementById('stat-total');
         const statPendingEl  = document.getElementById('stat-pending');
         const statVerifiedEl = document.getElementById('stat-verified');
@@ -369,8 +366,8 @@
             const categoryFilter = document.getElementById('category-filter').value;
             filteredHustlers = allHustlers.filter(h => {
                 const matchesSearch = !search ||
-                    (h.name   || '').toLowerCase().includes(search) ||
-                    (h.phone  || '').toLowerCase().includes(search) ||
+                    (h.name    || '').toLowerCase().includes(search) ||
+                    (h.phone   || '').toLowerCase().includes(search) ||
                     (h.location|| '').toLowerCase().includes(search) ||
                     (h.category|| '').toLowerCase().includes(search);
                 const matchesCategory = categoryFilter === 'all' ||
