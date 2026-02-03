@@ -33,6 +33,7 @@
         .toast.error { background: #ef4444; color: white; }
         .toast.info { background: #3b82f6; color: white; }
         .toast.warning { background: #f59e0b; color: white; }
+
         /* Dark mode styles */
         html.dark {
             --bg: #111827;
@@ -62,6 +63,16 @@
         .border-gray-300 { border-color: var(--border); }
         .bg-gray-50 { background-color: var(--card); }
         .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
+
+        /* Button hover animation */
+        .action-btn {
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-1px) scale(1.04);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            filter: brightness(1.08);
+        }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300">
@@ -484,15 +495,15 @@
                         </div>
                         <div class="ml-0 md:ml-8 mt-6 md:mt-0 flex flex-row md:flex-col gap-3">
                             <button onclick="toggleVerify('${h.id}', ${!h.verified})" 
-                                    class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border border-black/80 min-w-[110px]">
+                                    class="action-btn px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border-2 border-black/90 min-w-[110px] shadow-sm">
                                 ${h.verified ? 'Unverify' : 'Verify'}
                             </button>
                             <button onclick="openEditModal({id: '${h.id}', name: \`${(h.name || '').replace(/`/g,'\\`')}\`, category: \`${(h.category || '').replace(/`/g,'\\`')}\`, phone: \`${(h.phone || '').replace(/`/g,'\\`')}\`, location: \`${(h.location || '').replace(/`/g,'\\`')}\`, rate: '${h.rate || ''}', bio: \`${(h.bio || '').replace(/`/g,'\\`')}\`, imageUrl: \`${(h.imageUrl || '').replace(/`/g,'\\`')}\`})" 
-                                    class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border border-black/80 min-w-[110px]">
+                                    class="action-btn px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border-2 border-black/90 min-w-[110px] shadow-sm">
                                 Edit
                             </button>
                             <button onclick="deleteHustler('${h.id}')" 
-                                    class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border border-black/80 min-w-[110px]">
+                                    class="action-btn px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition border-2 border-black/90 min-w-[110px] shadow-sm">
                                 Delete
                             </button>
                         </div>
