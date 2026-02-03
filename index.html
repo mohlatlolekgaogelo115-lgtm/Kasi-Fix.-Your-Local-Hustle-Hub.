@@ -30,10 +30,9 @@
             opacity: 1;
         }
         .toast.success { background: #10b981; color: white; }
-        .toast.error   { background: #ef4444; color: white; }
-        .toast.info    { background: #3b82f6; color: white; }
+        .toast.error { background: #ef4444; color: white; }
+        .toast.info { background: #3b82f6; color: white; }
         .toast.warning { background: #f59e0b; color: white; }
-
         /* Dark mode styles */
         html.dark {
             --bg: #111827;
@@ -61,45 +60,26 @@
         .text-gray-500 { color: var(--text-secondary); }
         .border-gray-200 { border-color: var(--border); }
         .border-gray-300 { border-color: var(--border); }
-        .bg-gray-50   { background-color: var(--card); }
+        .bg-gray-50 { background-color: var(--card); }
         .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
-
-        /* Hover transitions */
-        .card-hover {
-            transition: all 0.2s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-3px) scale(1.015);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-        }
-        button:not([disabled]) {
-            transition: all 0.15s ease;
-        }
-        button:not([disabled]):hover {
-            transform: scale(1.03);
-        }
     </style>
 </head>
 <body class="min-h-screen transition-colors duration-300">
-
     <!-- Toast Container -->
     <div id="toast-container"></div>
-
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
             <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
-           
+          
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
                 <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
                 Sign in with Google
             </button>
-
             <p class="text-xs text-gray-500 mt-6">Only authorized Google accounts can access this dashboard.</p>
         </div>
     </div>
-
     <!-- Dashboard -->
     <div id="dashboard" class="hidden">
         <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
@@ -119,7 +99,6 @@
                 </div>
             </div>
         </nav>
-
         <div class="max-w-7xl mx-auto px-4 py-12">
             <!-- Stats Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -140,7 +119,6 @@
                     <p id="stat-avg-rate" class="text-3xl font-bold text-[#f97316] mt-1">R0</p>
                 </div>
             </div>
-
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
@@ -158,7 +136,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Filters -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -177,25 +154,14 @@
                     </div>
                 </div>
             </div>
-
-            <div id="admin-container" class="space-y-6 pb-20 relative">
+            <div id="admin-container" class="space-y-6">
                 <div class="text-center py-20 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
                     <p class="text-lg">Loading applications...</p>
                 </div>
             </div>
-
-            <!-- Bulk action bar -->
-            <div id="bulk-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-2xl rounded-2xl px-6 py-4 hidden flex items-center gap-6 z-50 transition-all duration-200">
-                <span id="bulk-count" class="font-medium text-gray-700 dark:text-gray-300"></span>
-                <button onclick="bulkVerify(true)" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-medium transition">Verify Selected</button>
-                <button onclick="bulkVerify(false)" class="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl font-medium transition">Unverify Selected</button>
-                <button onclick="bulkDelete()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition">Delete Selected</button>
-                <button onclick="clearBulk()" class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 font-medium">Clear</button>
-            </div>
         </div>
     </div>
-
     <!-- Add Hustler Modal -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -238,21 +204,22 @@
             </div>
         </div>
     </div>
-
     <script>
-        // Dark Mode Toggle
+        // ── Dark Mode Toggle ────────────────────────────────────────
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            document.getElementById('theme-icon').className = isDark
+                ? 'fa-solid fa-sun'
+                : 'fa-solid fa-moon';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
-        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('theme') === 'dark' ||
+            (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.getElementById('theme-icon').className = 'fa-solid fa-sun';
         }
-
-        // Firebase Config & Init (unchanged)
+        // ── Firebase ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
             authDomain: "kasifix-5b102.firebaseapp.com",
@@ -265,13 +232,45 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
-
-        // Auth functions (unchanged)
-        function signInWithGoogle() { /* ... unchanged ... */ }
-        function logout() { /* ... unchanged ... */ }
-        auth.onAuthStateChanged((user) => { /* ... unchanged ... */ });
-
-        // Core variables & functions (mostly unchanged)
+        // ── Auth ────────────────────────────────────────────────────
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    showToast(`Welcome, ${user.displayName || 'Admin'}!`, "success");
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    loadHustlers();
+                })
+                .catch((error) => {
+                    let message = "Google sign-in failed";
+                    if (error.code === 'auth/popup-closed-by-user') message = "Sign-in cancelled";
+                    showToast(message, "error");
+                    console.error(error);
+                });
+        }
+        function logout() {
+            auth.signOut().then(() => {
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+                showToast("Logged out successfully", "info");
+            }).catch((error) => {
+                showToast("Logout error: " + error.message, "error");
+            });
+        }
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadHustlers();
+            } else {
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+        });
+        // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
         const pendingCountEl = document.getElementById('pending-count');
@@ -279,52 +278,104 @@
         const statPendingEl = document.getElementById('stat-pending');
         const statVerifiedEl = document.getElementById('stat-verified');
         const statAvgRateEl = document.getElementById('stat-avg-rate');
-
         let allHustlers = [];
         let filteredHustlers = [];
-        let selectedIds = new Set();
-
-        function showToast(message, type = 'success') { /* ... unchanged ... */ }
-
-        function loadHustlers() { /* ... unchanged ... */ }
-
-        function updateStats() { /* ... unchanged ... */ }
-
-        function populateCategoryFilter() { /* ... unchanged ... */ }
-
-        function filterHustlers() { /* ... unchanged ... */ }
-
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center gap-3`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : type === 'warning' ? 'fa-triangle-exclamation' : 'fa-info-circle'} text-xl"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+        function loadHustlers() {
+            db.ref('hustlers').on('value', (snapshot) => {
+                allHustlers = [];
+                if (snapshot.val()) {
+                    Object.keys(snapshot.val()).forEach(key => {
+                        allHustlers.push({
+                            id: key,
+                            ...snapshot.val()[key]
+                        });
+                    });
+                    allHustlers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                }
+                updateStats();
+                populateCategoryFilter();
+                filterHustlers();
+            });
+        }
+        function updateStats() {
+            const total = allHustlers.length;
+            const pending = allHustlers.filter(h => !h.verified).length;
+            const verified = total - pending;
+            const rates = allHustlers.map(h => Number(h.rate || 0)).filter(r => r > 0);
+            const avgRate = rates.length > 0 ? (rates.reduce((a,b)=>a+b,0) / rates.length).toFixed(0) : 0;
+            statTotalEl.textContent = total;
+            statPendingEl.textContent = pending;
+            statVerifiedEl.textContent = verified;
+            statAvgRateEl.textContent = `R${avgRate}`;
+        }
+        function populateCategoryFilter() {
+            const select = document.getElementById('category-filter');
+            const categories = new Set();
+            allHustlers.forEach(h => {
+                if (h.category && h.category.trim()) categories.add(h.category.trim());
+            });
+            while (select.options.length > 1) select.remove(1);
+            [...categories].sort().forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.toLowerCase();
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+        function filterHustlers() {
+            const search = document.getElementById('search-input').value.toLowerCase().trim();
+            const categoryFilter = document.getElementById('category-filter').value;
+            filteredHustlers = allHustlers.filter(h => {
+                const matchesSearch = !search ||
+                    (h.name || '').toLowerCase().includes(search) ||
+                    (h.phone || '').toLowerCase().includes(search) ||
+                    (h.location|| '').toLowerCase().includes(search) ||
+                    (h.category|| '').toLowerCase().includes(search);
+                const matchesCategory = categoryFilter === 'all' ||
+                    (h.category || '').toLowerCase() === categoryFilter;
+                return matchesSearch && matchesCategory;
+            });
+            renderAdminHustlers();
+        }
         function renderAdminHustlers() {
             const hustlersToShow = filteredHustlers;
-            adminContainer.innerHTML = '';
-
             if (hustlersToShow.length === 0) {
-                let msg = allHustlers.length === 0 
-                    ? 'No hustlers have been added yet.<br>Use the "Add Hustler" button above to get started!'
-                    : 'No hustlers match your current search or category filter.<br>Try different keywords or clear the filters.';
-                
-                let extra = allHustlers.length > 0 ? `
-                    <button onclick="document.getElementById('search-input').value=''; document.getElementById('category-filter').value='all'; filterHustlers();" 
-                            class="mt-6 px-6 py-3 bg-[#f97316] text-white rounded-xl font-medium hover:bg-orange-600 transition">
-                        Reset Filters
-                    </button>` : '';
-
-                adminContainer.innerHTML = `
-                    <div class="text-center py-24 text-gray-500">
-                        <i class="fa-solid fa-${allHustlers.length === 0 ? 'inbox' : 'filter'} text-7xl mb-6 opacity-50"></i>
-                        <p class="text-xl font-medium">${msg}</p>
-                        ${extra}
-                    </div>`;
-                
+                if (allHustlers.length === 0) {
+                    adminContainer.innerHTML = `
+                        <div class="text-center py-20 text-gray-500">
+                            <i class="fa-solid fa-inbox text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">No applications yet.</p>
+                        </div>`;
+                } else {
+                    adminContainer.innerHTML = `
+                        <div class="text-center py-20 text-gray-500">
+                            <i class="fa-solid fa-filter text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">No hustlers match your filters.</p>
+                        </div>`;
+                }
                 totalCountEl.textContent = allHustlers.length;
                 pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
-
             const pending = allHustlers.filter(h => !h.verified).length;
             totalCountEl.textContent = allHustlers.length;
             pendingCountEl.textContent = pending;
-
+            adminContainer.innerHTML = '';
             hustlersToShow.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
@@ -334,9 +385,8 @@
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
-
                 const card = `
-                <div class="card-hover bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="p-6 flex flex-col md:flex-row">
                         <div class="mb-4 md:mb-0 md:mr-8">
                             ${imageHtml}
@@ -359,8 +409,7 @@
                             </div>
                             <p class="text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"><strong>Bio:</strong> ${h.bio || 'No bio provided'}</p>
                         </div>
-                        <div class="ml-0 md:ml-8 mt-6 md:mt-0 flex flex-row md:flex-col gap-4 items-start md:items-end">
-                            <input type="checkbox" class="w-5 h-5 mt-1.5 accent-[#f97316]" onchange="toggleSelection('${h.id}', this.checked)">
+                        <div class="ml-0 md:ml-8 mt-6 md:mt-0 flex flex-row md:flex-col gap-3">
                             <button onclick="toggleVerify('${h.id}', ${!h.verified})" class="px-6 py-3 rounded-xl text-white font-bold transition ${verifyBtnClass}">
                                 ${verifyBtnText}
                             </button>
@@ -373,79 +422,86 @@
                 adminContainer.innerHTML += card;
             });
         }
-
-        // Bulk selection helpers
-        function toggleSelection(id, isChecked) {
-            if (isChecked) {
-                selectedIds.add(id);
-            } else {
-                selectedIds.delete(id);
+        function toggleVerify(id, makeVerified) {
+            db.ref('hustlers/' + id).update({ verified: makeVerified })
+                .then(() => {
+                    showToast(makeVerified ? "Hustler verified" : "Verification removed", "success");
+                })
+                .catch(err => {
+                    showToast('Error updating status: ' + err.message, "error");
+                });
+        }
+        function deleteHustler(id) {
+            showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
+            const container = document.getElementById('toast-container');
+            const confirmToast = document.createElement('div');
+            confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
+            confirmToast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    <span>Confirm deletion?</span>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100" onclick="this.closest('.toast').remove()">Cancel</button>
+                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', this.closest('.toast'))">Delete</button>
+                </div>
+            `;
+            container.appendChild(confirmToast);
+            setTimeout(() => confirmToast.classList.add('show'), 100);
+        }
+        function confirmDelete(id, toastElement) {
+            db.ref('hustlers/' + id).remove()
+                .then(() => {
+                    showToast("Hustler profile deleted successfully", "success");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                })
+                .catch(err => {
+                    showToast('Error deleting hustler: ' + err.message, "error");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                });
+        }
+        function openAddModal() {
+            document.getElementById('add-modal').classList.remove('hidden');
+            ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image']
+                .forEach(id => document.getElementById(id).value = '');
+        }
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.add('hidden');
+        }
+        function submitNewHustler() {
+            const name = document.getElementById('new-name').value.trim();
+            const category = document.getElementById('new-category').value.trim();
+            const phone = document.getElementById('new-phone').value.trim();
+            if (!name || !category || !phone) {
+                showToast("Name, Category, and Phone Number are required", "error");
+                return;
             }
-            updateBulkBar();
+            const newHustler = {
+                name: name,
+                category: category,
+                phone: phone,
+                location: document.getElementById('new-location').value.trim() || null,
+                rate: document.getElementById('new-rate').value.trim() || null,
+                bio: document.getElementById('new-bio').value.trim() || null,
+                imageUrl: document.getElementById('new-image').value.trim() || null,
+                verified: false,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+            db.ref('hustlers').push(newHustler)
+                .then(() => {
+                    showToast("Hustler added successfully!", "success");
+                    closeAddModal();
+                })
+                .catch(err => {
+                    showToast("Error adding hustler: " + err.message, "error");
+                });
         }
-
-        function updateBulkBar() {
-            const count = selectedIds.size;
-            const bar = document.getElementById('bulk-bar');
-            const text = document.getElementById('bulk-count');
-
-            if (count > 0) {
-                text.textContent = `${count} selected`;
-                bar.classList.remove('hidden');
-            } else {
-                bar.classList.add('hidden');
-            }
-        }
-
-        function clearBulk() {
-            selectedIds.clear();
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-            updateBulkBar();
-        }
-
-        async function bulkVerify(shouldVerify) {
-            if (selectedIds.size === 0) return;
-            const action = shouldVerify ? 'verify' : 'unverify';
-            if (!confirm(`Are you sure you want to ${action} ${selectedIds.size} hustler(s)?`)) return;
-
-            const updates = {};
-            selectedIds.forEach(id => {
-                updates[`hustlers/${id}/verified`] = shouldVerify;
-            });
-
-            try {
-                await db.ref().update(updates);
-                showToast(`Successfully ${action}ed ${selectedIds.size} hustler(s)`, 'success');
-                clearBulk();
-            } catch (err) {
-                showToast('Bulk action failed: ' + err.message, 'error');
-            }
-        }
-
-        async function bulkDelete() {
-            if (selectedIds.size === 0) return;
-            if (!confirm(`Permanently delete ${selectedIds.size} hustler(s)? This cannot be undone.`)) return;
-
-            try {
-                const promises = [...selectedIds].map(id => db.ref(`hustlers/${id}`).remove());
-                await Promise.all(promises);
-                showToast(`${selectedIds.size} hustler(s) deleted`, 'success');
-                clearBulk();
-            } catch (err) {
-                showToast('Bulk delete failed: ' + err.message, 'error');
-            }
-        }
-
-        // Rest of functions unchanged
-        function toggleVerify(id, makeVerified) { /* ... */ }
-        function deleteHustler(id) { /* ... */ }
-        function confirmDelete(id, toastElement) { /* ... */ }
-        function openAddModal() { /* ... */ }
-        function closeAddModal() { /* ... */ }
-        function submitNewHustler() { /* ... */ }
-
-        // Load on auth
-        loadHustlers();  // Note: in real use this is called after login
     </script>
 </body>
 </html>
