@@ -62,7 +62,6 @@
         .border-gray-300 { border-color: var(--border); }
         .bg-gray-50 { background-color: var(--card); }
         .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
-        /* Button hover animation */
         .action-btn {
             transition: all 0.2s ease;
         }
@@ -187,7 +186,16 @@
                 </div>
             </div>
 
-            <!-- Pagination will be inserted here dynamically -->
+            <!-- Pagination -->
+            <div id="pagination" class="flex justify-center items-center gap-4 mt-8"></div>
+
+            <!-- Simple Audit Log -->
+            <div class="mt-16">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Recent Admin Actions</h2>
+                <div id="audit-log" class="bg-white rounded-2xl shadow border border-gray-200 p-6 max-h-96 overflow-y-auto text-sm">
+                    <p class="text-gray-500">Loading audit log...</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -281,7 +289,7 @@
     <script>
         // ── Allowed accounts ────────────────────────────────────────
         const allowedDomains = ['gmail.com', 'yourcompany.co.za']; // ← CHANGE THIS
-        const allowedEmails = ['admin@yourcompany.co.za', 'your.email@gmail.com']; // ← CHANGE THIS (optional)
+        const allowedEmails = ['admin@yourcompany.co.za', 'your.email@gmail.com']; // ← CHANGE THIS
 
         // ── Dark Mode Toggle ────────────────────────────────────────
         function toggleDarkMode() {
@@ -313,6 +321,89 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
+
+        let currentUserEmail = null;
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUserEmail = user.email;
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                loadHustlers();
+                loadAuditLog();
+            } else {
+                currentUserEmail = null;
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-screen').classList.remove('hidden');
+            }
+        });
+
+        // ── Simple Audit Logging ────────────────────────────────────
+        function logAction(action, hustlerId = null, extra = {}) {
+            if (!currentUserEmail) return;
+
+            const entry = {
+                action,
+                performedBy: currentUserEmail,
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                hustlerId: hustlerId || null,
+                ...extra
+            };
+
+            db.ref('audit_logs').push(entry);
+        }
+
+        function loadAuditLog() {
+            const auditEl = document.getElementById('audit-log');
+            db.ref('audit_logs')
+                .orderByChild('timestamp')
+                .limitToLast(50)
+                .on('value', (snapshot) => {
+                    if (!snapshot.exists()) {
+                        auditEl.innerHTML = '<p class="text-gray-500">No actions logged yet.</p>';
+                        return;
+                    }
+
+                    let html = '';
+                    const logs = [];
+                    snapshot.forEach(child => {
+                        logs.push(child.val());
+                    });
+
+                    // Newest first
+                    logs.reverse();
+
+                    logs.forEach(log => {
+                        const time = log.timestamp ? new Date(log.timestamp).toLocaleString('en-ZA') : 'Unknown';
+                        let desc = '';
+
+                        if (log.action === 'add_hustler') {
+                            desc = `Added new hustler`;
+                        } else if (log.action === 'edit_hustler') {
+                            desc = `Edited hustler ${log.hustlerId}`;
+                        } else if (log.action === 'verify') {
+                            desc = `Verified hustler ${log.hustlerId}`;
+                        } else if (log.action === 'unverify') {
+                            desc = `Unverified hustler ${log.hustlerId}`;
+                        } else if (log.action === 'delete_hustler') {
+                            desc = `Deleted hustler ${log.hustlerId}`;
+                        } else {
+                            desc = log.action;
+                        }
+
+                        html += `
+                            <div class="py-2 border-b border-gray-100 last:border-0 flex justify-between">
+                                <div>
+                                    <span class="font-medium">${log.performedBy}</span>
+                                    <span class="text-gray-600 ml-2">${desc}</span>
+                                </div>
+                                <div class="text-gray-500 text-right">${time}</div>
+                            </div>`;
+                    });
+
+                    auditEl.innerHTML = html || '<p class="text-gray-500">No recent actions.</p>';
+                });
+        }
 
         // ── Auth ────────────────────────────────────────────────────
         function signInWithGoogle() {
@@ -355,17 +446,6 @@
                 showToast("Logout error: " + error.message, "error");
             });
         }
-
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                loadHustlers();
-            } else {
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('login-screen').classList.remove('hidden');
-            }
-        });
 
         // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
@@ -606,6 +686,8 @@
         }
 
         function toggleVerify(id, makeVerified) {
+            logAction(makeVerified ? 'verify' : 'unverify', id);
+
             db.ref('hustlers/' + id).update({ verified: makeVerified })
                 .then(() => {
                     showToast(makeVerified ? "Hustler verified" : "Verification removed", "success");
@@ -636,6 +718,8 @@
         }
 
         function confirmDelete(id, toastElement) {
+            logAction('delete_hustler', id);
+
             db.ref('hustlers/' + id).remove()
                 .then(() => {
                     showToast("Hustler profile deleted successfully", "success");
@@ -686,7 +770,9 @@
             };
 
             db.ref('hustlers').push(newHustler)
-                .then(() => {
+                .then((ref) => {
+                    const newId = ref.key;
+                    logAction('add_hustler', newId, { name, category, phone });
                     showToast("Hustler added successfully!", "success");
                     closeAddModal();
                 })
@@ -736,6 +822,8 @@
                 verified: current.verified || false,
                 timestamp: current.timestamp || firebase.database.ServerValue.TIMESTAMP
             };
+
+            logAction('edit_hustler', id, { name, category, phone });
 
             db.ref('hustlers/' + id).update(updatedHustler)
                 .then(() => {
