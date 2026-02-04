@@ -149,16 +149,10 @@
                 </div>
             </div>
 
-            <!-- Simple Charts (smaller bar graph) -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white rounded-2xl shadow border border-gray-200 p-5">
-                    <h3 class="text-base font-semibold mb-3">New Registrations (Last 4 Weeks)</h3>
-                    <div style="height: 140px;">
-                        <canvas id="registrationsChart"></canvas>
-                    </div>
-                </div>
-                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold mb-4">Verification Rate</h3>
+            <!-- Simple Charts (only Verification Rate pie remains) -->
+            <div class="grid grid-cols-1 gap-8 mb-12">
+                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 mx-auto max-w-md">
+                    <h3 class="text-lg font-semibold mb-4 text-center">Verification Rate</h3>
                     <div style="height: 180px;">
                         <canvas id="verificationChart"></canvas>
                     </div>
@@ -747,63 +741,11 @@
             }
         }
 
-        // ── Charts ──────────────────────────────────────────────────
-        let registrationsChart, verificationChart;
+        // ── Charts (only Verification Rate pie remains) ─────────────
+        let verificationChart;
 
         function renderCharts() {
-            // Registrations per week (last 4 weeks) — smaller chart
-            const now = Date.now();
-            const oneWeek = 7 * 24 * 60 * 60 * 1000;
-            const weeks = [];
-            const counts = [0,0,0,0];
-
-            for (let i = 3; i >= 0; i--) {
-                const end = now - i*oneWeek;
-                weeks.push(new Date(end).toLocaleDateString('en-ZA', {month:'short', day:'numeric'}));
-            }
-
-            allHustlers.forEach(h => {
-                if (h.timestamp) {
-                    const ts = h.timestamp;
-                    if (ts >= now - 4*oneWeek && ts < now) {
-                        const weekIndex = Math.floor((now - ts) / oneWeek);
-                        if (weekIndex >= 0 && weekIndex < 4) {
-                            counts[3 - weekIndex]++;
-                        }
-                    }
-                }
-            });
-
-            if (registrationsChart) registrationsChart.destroy();
-            registrationsChart = new Chart(document.getElementById('registrationsChart'), {
-                type: 'bar',
-                data: {
-                    labels: weeks.reverse(),
-                    datasets: [{
-                        label: 'New registrations',
-                        data: counts.reverse(),
-                        backgroundColor: '#3b82f6',
-                        borderColor: '#1e40af',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { 
-                            beginAtZero: true, 
-                            ticks: { stepSize: 1, font: { size: 11 } }
-                        },
-                        x: { ticks: { font: { size: 11 } } }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-
-            // Verification rate pie (unchanged size)
+            // Verification rate pie
             const verifiedCount = allHustlers.filter(h => h.verified).length;
             const pendingCount = allHustlers.length - verifiedCount;
 
@@ -949,7 +891,6 @@
             document.getElementById('edit-modal').classList.remove('hidden');
         }
 
-        // ── Other functions remain unchanged ────────────────────────
         function toggleVerify(id, makeVerified) {
             logAction(makeVerified ? 'verify' : 'unverify', id);
             db.ref('hustlers/' + id).update({ verified: makeVerified })
@@ -1008,15 +949,6 @@
 
         function closeEditModal() {
             document.getElementById('edit-modal').classList.add('hidden');
-        }
-
-        // (copyPhone function remains the same)
-        function copyPhoneNumber(phone) {
-            navigator.clipboard.writeText(phone).then(() => {
-                showToast("Phone number copied!", "success");
-            }).catch(() => {
-                showToast("Failed to copy phone number", "error");
-            });
         }
     </script>
 </body>
