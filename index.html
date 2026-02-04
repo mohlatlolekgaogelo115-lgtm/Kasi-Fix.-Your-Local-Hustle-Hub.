@@ -99,6 +99,7 @@
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
             <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
+         
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
                 <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
                 Sign in with Google
@@ -128,7 +129,7 @@
         </nav>
 
         <div class="max-w-7xl mx-auto px-4 py-12">
-            <!-- Stats Section + Charts -->
+            <!-- Stats Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
                     <p class="text-sm text-gray-500">Total Hustlers</p>
@@ -148,15 +149,19 @@
                 </div>
             </div>
 
-            <!-- Simple Charts -->
+            <!-- Simple Charts (smaller bar graph) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold mb-4">New Registrations (Last 4 Weeks)</h3>
-                    <canvas id="registrationsChart" height="180"></canvas>
+                <div class="bg-white rounded-2xl shadow border border-gray-200 p-5">
+                    <h3 class="text-base font-semibold mb-3">New Registrations (Last 4 Weeks)</h3>
+                    <div style="height: 140px;">
+                        <canvas id="registrationsChart"></canvas>
+                    </div>
                 </div>
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold mb-4">Verification Rate</h3>
-                    <canvas id="verificationChart" height="180"></canvas>
+                    <div style="height: 180px;">
+                        <canvas id="verificationChart"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -746,14 +751,13 @@
         let registrationsChart, verificationChart;
 
         function renderCharts() {
-            // Registrations per week (last 4 weeks)
+            // Registrations per week (last 4 weeks) — smaller chart
             const now = Date.now();
             const oneWeek = 7 * 24 * 60 * 60 * 1000;
             const weeks = [];
             const counts = [0,0,0,0];
 
             for (let i = 3; i >= 0; i--) {
-                const start = now - (i+1)*oneWeek;
                 const end = now - i*oneWeek;
                 weeks.push(new Date(end).toLocaleDateString('en-ZA', {month:'short', day:'numeric'}));
             }
@@ -787,12 +791,19 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { stepSize: 1, font: { size: 11 } }
+                        },
+                        x: { ticks: { font: { size: 11 } } }
+                    },
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
             });
 
-            // Verification rate pie
+            // Verification rate pie (unchanged size)
             const verifiedCount = allHustlers.filter(h => h.verified).length;
             const pendingCount = allHustlers.length - verifiedCount;
 
@@ -938,9 +949,75 @@
             document.getElementById('edit-modal').classList.remove('hidden');
         }
 
-        // Rest of your existing functions (toggleVerify, deleteHustler, confirmDelete, openAddModal, closeAddModal, etc.) remain unchanged
-        // ... (copy them from your previous version)
+        // ── Other functions remain unchanged ────────────────────────
+        function toggleVerify(id, makeVerified) {
+            logAction(makeVerified ? 'verify' : 'unverify', id);
+            db.ref('hustlers/' + id).update({ verified: makeVerified })
+                .then(() => showToast(makeVerified ? "Hustler verified" : "Verification removed", "success"))
+                .catch(err => showToast('Error updating status: ' + err.message, "error"));
+        }
 
+        function deleteHustler(id) {
+            showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
+            const container = document.getElementById('toast-container');
+            const confirmToast = document.createElement('div');
+            confirmToast.className = `toast warning px-6 py-4 rounded-xl shadow-2xl text-base font-medium flex items-center justify-between gap-4`;
+            confirmToast.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                    <span>Confirm deletion?</span>
+                </div>
+                <div class="flex gap-3">
+                    <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100" onclick="this.closest('.toast').remove()">Cancel</button>
+                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', this.closest('.toast'))">Delete</button>
+                </div>
+            `;
+            container.appendChild(confirmToast);
+            setTimeout(() => confirmToast.classList.add('show'), 100);
+        }
+
+        function confirmDelete(id, toastElement) {
+            logAction('delete_hustler', id);
+            db.ref('hustlers/' + id).remove()
+                .then(() => {
+                    showToast("Hustler profile deleted successfully", "success");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                })
+                .catch(err => {
+                    showToast('Error deleting hustler: ' + err.message, "error");
+                    if (toastElement) {
+                        toastElement.classList.remove('show');
+                        setTimeout(() => toastElement.remove(), 400);
+                    }
+                });
+        }
+
+        function openAddModal() {
+            document.getElementById('add-modal').classList.remove('hidden');
+            ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image-url']
+                .forEach(id => document.getElementById(id).value = '');
+            document.getElementById('new-photo').value = '';
+        }
+
+        function closeAddModal() {
+            document.getElementById('add-modal').classList.add('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        // (copyPhone function remains the same)
+        function copyPhoneNumber(phone) {
+            navigator.clipboard.writeText(phone).then(() => {
+                showToast("Phone number copied!", "success");
+            }).catch(() => {
+                showToast("Failed to copy phone number", "error");
+            });
+        }
     </script>
 </body>
 </html>
