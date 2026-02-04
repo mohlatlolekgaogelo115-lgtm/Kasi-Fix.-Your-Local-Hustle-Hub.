@@ -62,7 +62,6 @@
         .border-gray-300 { border-color: var(--border); }
         .bg-gray-50 { background-color: var(--card); }
         .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
-        /* Button hover animation */
         .action-btn {
             transition: all 0.2s ease;
         }
@@ -147,6 +146,19 @@
                             Pending applications: <span id="pending-count">0</span>
                         </p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Bulk Actions Bar -->
+            <div id="bulk-actions" class="hidden bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span id="selected-count" class="font-medium text-orange-800">0 selected</span>
+                </div>
+                <div class="flex gap-3 flex-wrap">
+                    <button onclick="bulkVerify(true)" class="px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition shadow-sm">Verify Selected</button>
+                    <button onclick="bulkVerify(false)" class="px-5 py-2.5 bg-orange-600 text-white rounded-lg font-medium hover:bg-orange-700 transition shadow-sm">Unverify Selected</button>
+                    <button onclick="bulkDelete()" class="px-5 py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition shadow-sm">Delete Selected</button>
+                    <button onclick="clearSelection()" class="px-5 py-2.5 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition">Clear Selection</button>
                 </div>
             </div>
 
@@ -314,6 +326,9 @@
         const db = firebase.database();
         const auth = firebase.auth();
 
+        // Current user email for audit log
+        let currentUserEmail = 'unknown';
+
         // ── Auth ────────────────────────────────────────────────────
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -322,6 +337,7 @@
             auth.signInWithPopup(provider)
                 .then((result) => {
                     const user = result.user;
+                    currentUserEmail = user.email || 'unknown';
                     const email = user.email.toLowerCase();
                     const domain = email.split('@')[1];
 
@@ -348,6 +364,7 @@
 
         function logout() {
             auth.signOut().then(() => {
+                currentUserEmail = 'unknown';
                 document.getElementById('dashboard').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
                 showToast("Logged out successfully", "info");
@@ -358,14 +375,29 @@
 
         auth.onAuthStateChanged((user) => {
             if (user) {
+                currentUserEmail = user.email || 'unknown';
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('dashboard').classList.remove('hidden');
                 loadHustlers();
             } else {
+                currentUserEmail = 'unknown';
                 document.getElementById('dashboard').classList.add('hidden');
                 document.getElementById('login-screen').classList.remove('hidden');
             }
         });
+
+        // ── Audit Log Helper ────────────────────────────────────────
+        function logAction(action, hustlerId, hustlerName) {
+            const logEntry = {
+                action: action,
+                performedBy: currentUserEmail,
+                hustlerId: hustlerId,
+                hustlerName: hustlerName || 'Unknown',
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+            db.ref('audit').push(logEntry)
+                .catch(err => console.error("Audit log failed:", err));
+        }
 
         // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
@@ -381,6 +413,7 @@
         let currentPage = 1;
         const itemsPerPage = 10;
         let currentSort = 'newest';
+        let selectedIds = new Set();
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -460,6 +493,8 @@
             });
 
             currentPage = 1;
+            selectedIds.clear();
+            updateBulkActionsUI();
             applySortAndPaginate();
         }
 
@@ -518,13 +553,19 @@
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                 const statusText = h.verified ? 'VERIFIED' : 'PENDING';
+                const isSelected = selectedIds.has(h.id);
 
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
 
                 const card = `
-                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden relative">
+                    <div class="absolute top-4 left-4 z-10">
+                        <input type="checkbox" class="h-5 w-5 text-[#f97316] border-gray-300 rounded focus:ring-[#f97316]" 
+                               ${isSelected ? 'checked' : ''} 
+                               onchange="toggleSelection('${h.id}', this.checked)">
+                    </div>
                     <div class="p-6 flex flex-col md:flex-row">
                         <div class="mb-4 md:mb-0 md:mr-8">
                             ${imageHtml}
@@ -568,6 +609,92 @@
             });
         }
 
+        // ── Selection & Bulk Actions ────────────────────────────────
+        function toggleSelection(id, checked) {
+            if (checked) {
+                selectedIds.add(id);
+            } else {
+                selectedIds.delete(id);
+            }
+            updateBulkActionsUI();
+        }
+
+        function updateBulkActionsUI() {
+            const count = selectedIds.size;
+            const bulkBar = document.getElementById('bulk-actions');
+            const countEl = document.getElementById('selected-count');
+
+            if (count > 0) {
+                bulkBar.classList.remove('hidden');
+                countEl.textContent = `${count} selected`;
+            } else {
+                bulkBar.classList.add('hidden');
+            }
+        }
+
+        function clearSelection() {
+            selectedIds.clear();
+            updateBulkActionsUI();
+            applySortAndPaginate(); // refresh cards to uncheck boxes
+        }
+
+        function bulkVerify(makeVerified) {
+            if (selectedIds.size === 0) return;
+
+            const actionText = makeVerified ? 'verify' : 'unverify';
+            if (!confirm(`Are you sure you want to ${actionText} ${selectedIds.size} hustler(s)?`)) return;
+
+            const promises = [];
+            selectedIds.forEach(id => {
+                const hustler = allHustlers.find(h => h.id === id);
+                const name = hustler ? hustler.name : 'Unknown';
+                promises.push(
+                    db.ref('hustlers/' + id).update({ verified: makeVerified })
+                        .then(() => {
+                            logAction(makeVerified ? 'bulk_verify' : 'bulk_unverify', id, name);
+                        })
+                );
+            });
+
+            Promise.all(promises)
+                .then(() => {
+                    showToast(`Successfully ${makeVerified ? 'verified' : 'unverified'} ${selectedIds.size} hustler(s)`, "success");
+                    selectedIds.clear();
+                    updateBulkActionsUI();
+                })
+                .catch(err => {
+                    showToast("Error during bulk update: " + err.message, "error");
+                });
+        }
+
+        function bulkDelete() {
+            if (selectedIds.size === 0) return;
+
+            if (!confirm(`Are you sure you want to permanently DELETE ${selectedIds.size} hustler(s)? This cannot be undone.`)) return;
+
+            const promises = [];
+            selectedIds.forEach(id => {
+                const hustler = allHustlers.find(h => h.id === id);
+                const name = hustler ? hustler.name : 'Unknown';
+                promises.push(
+                    db.ref('hustlers/' + id).remove()
+                        .then(() => {
+                            logAction('bulk_delete', id, name);
+                        })
+                );
+            });
+
+            Promise.all(promises)
+                .then(() => {
+                    showToast(`Successfully deleted ${selectedIds.size} hustler(s)`, "success");
+                    selectedIds.clear();
+                    updateBulkActionsUI();
+                })
+                .catch(err => {
+                    showToast("Error during bulk delete: " + err.message, "error");
+                });
+        }
+
         function updatePaginationControls(totalFiltered) {
             const totalPages = Math.ceil(totalFiltered / itemsPerPage);
             let pagination = document.getElementById('pagination');
@@ -606,8 +733,12 @@
         }
 
         function toggleVerify(id, makeVerified) {
+            const hustler = allHustlers.find(h => h.id === id);
+            const name = hustler ? hustler.name : 'Unknown';
+
             db.ref('hustlers/' + id).update({ verified: makeVerified })
                 .then(() => {
+                    logAction(makeVerified ? 'verify' : 'unverify', id, name);
                     showToast(makeVerified ? "Hustler verified" : "Verification removed", "success");
                 })
                 .catch(err => {
@@ -616,6 +747,9 @@
         }
 
         function deleteHustler(id) {
+            const hustler = allHustlers.find(h => h.id === id);
+            const name = hustler ? hustler.name : 'Unknown';
+
             showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
 
             const container = document.getElementById('toast-container');
@@ -628,16 +762,17 @@
                 </div>
                 <div class="flex gap-3">
                     <button class="px-4 py-2 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100" onclick="this.closest('.toast').remove()">Cancel</button>
-                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', this.closest('.toast'))">Delete</button>
+                    <button class="px-4 py-2 bg-red-700 text-white rounded-lg font-medium hover:bg-red-800" onclick="confirmDelete('${id}', '${name}', this.closest('.toast'))">Delete</button>
                 </div>
             `;
             container.appendChild(confirmToast);
             setTimeout(() => confirmToast.classList.add('show'), 100);
         }
 
-        function confirmDelete(id, toastElement) {
+        function confirmDelete(id, name, toastElement) {
             db.ref('hustlers/' + id).remove()
                 .then(() => {
+                    logAction('delete', id, name);
                     showToast("Hustler profile deleted successfully", "success");
                     if (toastElement) {
                         toastElement.classList.remove('show');
@@ -653,6 +788,7 @@
                 });
         }
 
+        // ── Add Modal ───────────────────────────────────────────────
         function openAddModal() {
             document.getElementById('add-modal').classList.remove('hidden');
             ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image']
@@ -686,7 +822,8 @@
             };
 
             db.ref('hustlers').push(newHustler)
-                .then(() => {
+                .then((ref) => {
+                    logAction('add', ref.key, name);
                     showToast("Hustler added successfully!", "success");
                     closeAddModal();
                 })
@@ -695,6 +832,7 @@
                 });
         }
 
+        // ── Edit Modal ──────────────────────────────────────────────
         function openEditModal(hustler) {
             document.getElementById('edit-id').value = hustler.id;
             document.getElementById('edit-name').value = hustler.name || '';
@@ -739,6 +877,7 @@
 
             db.ref('hustlers/' + id).update(updatedHustler)
                 .then(() => {
+                    logAction('edit', id, name);
                     showToast("Hustler updated successfully!", "success");
                     closeEditModal();
                 })
