@@ -129,8 +129,8 @@
         </nav>
 
         <div class="max-w-7xl mx-auto px-4 py-12">
-            <!-- Stats Section -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <!-- Stats Section + New Daily/Weekly/Monthly cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6 mb-10">
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
                     <p class="text-sm text-gray-500">Total Hustlers</p>
                     <p id="stat-total" class="text-3xl font-bold text-gray-900 mt-1">0</p>
@@ -146,6 +146,18 @@
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
                     <p class="text-sm text-gray-500">Avg Hourly Rate</p>
                     <p id="stat-avg-rate" class="text-3xl font-bold text-[#f97316] mt-1">R0</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
+                    <p class="text-sm text-gray-500">Registered Today</p>
+                    <p id="stat-today" class="text-3xl font-bold text-blue-600 mt-1">0</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
+                    <p class="text-sm text-gray-500">This Week</p>
+                    <p id="stat-week" class="text-3xl font-bold text-indigo-600 mt-1">0</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 text-center">
+                    <p class="text-sm text-gray-500">This Month</p>
+                    <p id="stat-month" class="text-3xl font-bold text-purple-600 mt-1">0</p>
                 </div>
             </div>
 
@@ -474,6 +486,9 @@
         const statPendingEl = document.getElementById('stat-pending');
         const statVerifiedEl = document.getElementById('stat-verified');
         const statAvgRateEl = document.getElementById('stat-avg-rate');
+        const statTodayEl = document.getElementById('stat-today');
+        const statWeekEl = document.getElementById('stat-week');
+        const statMonthEl = document.getElementById('stat-month');
 
         let allHustlers = [];
         let filteredHustlers = [];
@@ -527,6 +542,27 @@
             statPendingEl.textContent = pending;
             statVerifiedEl.textContent = verified;
             statAvgRateEl.textContent = `R${avgRate}`;
+
+            // New: Daily / Weekly / Monthly registrations
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
+            const oneWeek = 7 * oneDay;
+            const oneMonth = 30 * oneDay;
+
+            let today = 0, week = 0, month = 0;
+
+            allHustlers.forEach(h => {
+                if (h.timestamp) {
+                    const age = now - h.timestamp;
+                    if (age <= oneDay) today++;
+                    if (age <= oneWeek) week++;
+                    if (age <= oneMonth) month++;
+                }
+            });
+
+            statTodayEl.textContent = today;
+            statWeekEl.textContent = week;
+            statMonthEl.textContent = month;
         }
 
         function populateCategoryFilter() {
@@ -745,7 +781,6 @@
         let verificationChart;
 
         function renderCharts() {
-            // Verification rate pie
             const verifiedCount = allHustlers.filter(h => h.verified).length;
             const pendingCount = allHustlers.length - verifiedCount;
 
