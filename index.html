@@ -93,13 +93,12 @@
 <body class="min-h-screen transition-colors duration-300">
     <!-- Toast Container -->
     <div id="toast-container"></div>
-
     <!-- Login Screen -->
     <div id="login-screen" class="flex items-center justify-center min-h-screen px-4">
         <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
             <h1 class="text-4xl font-extrabold text-[#1e3a8a] mb-8">KasiFix Admin</h1>
             <p class="text-gray-600 mb-8">Sign in with Google to access the dashboard.</p>
-         
+        
             <button onclick="signInWithGoogle()" class="w-full bg-white border border-gray-300 text-gray-800 py-4 rounded-xl font-medium text-lg hover:bg-gray-50 transition shadow-md flex items-center justify-center gap-3 mb-6">
                 <i class="fa-brands fa-google text-xl text-[#4285F4]"></i>
                 Sign in with Google
@@ -107,7 +106,6 @@
             <p class="text-xs text-gray-500 mt-6">Only authorized Google accounts can access this dashboard.</p>
         </div>
     </div>
-
     <!-- Dashboard -->
     <div id="dashboard" class="hidden">
         <nav class="bg-white border-b sticky top-0 z-40 shadow-sm">
@@ -127,7 +125,6 @@
                 </div>
             </div>
         </nav>
-
         <div class="max-w-7xl mx-auto px-4 py-12">
             <!-- Stats Section + New Daily/Weekly/Monthly cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-6 mb-10">
@@ -160,7 +157,6 @@
                     <p id="stat-month" class="text-3xl font-bold text-purple-600 mt-1">0</p>
                 </div>
             </div>
-
             <!-- Simple Charts (only Verification Rate pie remains) -->
             <div class="grid grid-cols-1 gap-8 mb-12">
                 <div class="bg-white rounded-2xl shadow border border-gray-200 p-6 mx-auto max-w-md">
@@ -170,7 +166,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-6">
                 <div>
                     <h2 class="text-3xl font-extrabold text-gray-900">Hustler Applications</h2>
@@ -188,7 +183,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Filters -->
             <div class="bg-white p-6 rounded-2xl shadow border border-gray-200 mb-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -218,17 +212,14 @@
                     </div>
                 </div>
             </div>
-
             <div id="admin-container" class="space-y-6">
                 <div class="text-center py-20 text-gray-500">
                     <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
                     <p class="text-lg">Loading applications...</p>
                 </div>
             </div>
-
             <!-- Pagination -->
             <div id="pagination" class="flex justify-center items-center gap-4 mt-8"></div>
-
             <!-- Simple Audit Log -->
             <div class="mt-16">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Recent Admin Actions</h2>
@@ -237,8 +228,11 @@
                 </div>
             </div>
         </div>
+        <footer class="bg-white border-t py-6 text-center text-gray-600 mt-12 shadow-sm">
+            <p class="text-sm font-medium">© 2026 KasiFix. All rights reserved.</p>
+            <p class="text-xs mt-1">Powered by xAI | Contact: support@kasifix.co.za</p>
+        </footer>
     </div>
-
     <!-- Add Hustler Modal -->
     <div id="add-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -284,7 +278,6 @@
             </div>
         </div>
     </div>
-
     <!-- Edit Hustler Modal -->
     <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden px-4">
         <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -340,12 +333,10 @@
             </div>
         </div>
     </div>
-
     <script>
         // ── Allowed accounts ────────────────────────────────────────
         const allowedDomains = ['gmail.com', 'yourcompany.co.za']; // ← CHANGE THIS
         const allowedEmails = ['admin@yourcompany.co.za', 'your.email@gmail.com']; // ← CHANGE THIS
-
         // ── Dark Mode Toggle ────────────────────────────────────────
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
@@ -353,13 +344,11 @@
             document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
-
         if (localStorage.getItem('theme') === 'dark' ||
             (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
             document.getElementById('theme-icon').className = 'fa-solid fa-sun';
         }
-
         // ── Firebase ────────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyC4kR_HiywObXho8Zh20JyzC40iVrZq3lo",
@@ -370,14 +359,11 @@
             appId: "1:800882399249:web:f8ecdfb12fa98d7a5779b0",
             measurementId: "G-8NKED4DENK"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
         const storage = firebase.storage();
-
         let currentUserEmail = null;
-
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUserEmail = user.email;
@@ -391,7 +377,6 @@
                 document.getElementById('login-screen').classList.remove('hidden');
             }
         });
-
         // ── Simple Audit Logging ────────────────────────────────────
         function logAction(action, hustlerId = null, extra = {}) {
             if (!currentUserEmail) return;
@@ -404,7 +389,6 @@
             };
             db.ref('audit_logs').push(entry);
         }
-
         function loadAuditLog() {
             const auditEl = document.getElementById('audit-log');
             db.ref('audit_logs')
@@ -439,7 +423,6 @@
                     auditEl.innerHTML = html || '<p class="text-gray-500">No recent actions.</p>';
                 });
         }
-
         // ── Auth ────────────────────────────────────────────────────
         function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -467,7 +450,6 @@
                     console.error(error);
                 });
         }
-
         function logout() {
             auth.signOut().then(() => {
                 document.getElementById('dashboard').classList.add('hidden');
@@ -477,7 +459,6 @@
                 showToast("Logout error: " + error.message, "error");
             });
         }
-
         // ── Core logic ──────────────────────────────────────────────
         const adminContainer = document.getElementById('admin-container');
         const totalCountEl = document.getElementById('total-count');
@@ -489,13 +470,11 @@
         const statTodayEl = document.getElementById('stat-today');
         const statWeekEl = document.getElementById('stat-week');
         const statMonthEl = document.getElementById('stat-month');
-
         let allHustlers = [];
         let filteredHustlers = [];
         let currentPage = 1;
         const itemsPerPage = 10;
         let currentSort = 'newest';
-
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -511,7 +490,6 @@
                 setTimeout(() => toast.remove(), 400);
             }, 3500);
         }
-
         function loadHustlers() {
             db.ref('hustlers').on('value', (snapshot) => {
                 allHustlers = [];
@@ -530,27 +508,22 @@
                 renderCharts();
             });
         }
-
         function updateStats() {
             const total = allHustlers.length;
             const pending = allHustlers.filter(h => !h.verified).length;
             const verified = total - pending;
             const rates = allHustlers.map(h => Number(h.rate || 0)).filter(r => r > 0);
             const avgRate = rates.length > 0 ? (rates.reduce((a,b)=>a+b,0) / rates.length).toFixed(0) : 0;
-
             statTotalEl.textContent = total;
             statPendingEl.textContent = pending;
             statVerifiedEl.textContent = verified;
             statAvgRateEl.textContent = `R${avgRate}`;
-
             // New: Daily / Weekly / Monthly registrations
             const now = Date.now();
             const oneDay = 24 * 60 * 60 * 1000;
             const oneWeek = 7 * oneDay;
             const oneMonth = 30 * oneDay;
-
             let today = 0, week = 0, month = 0;
-
             allHustlers.forEach(h => {
                 if (h.timestamp) {
                     const age = now - h.timestamp;
@@ -559,12 +532,10 @@
                     if (age <= oneMonth) month++;
                 }
             });
-
             statTodayEl.textContent = today;
             statWeekEl.textContent = week;
             statMonthEl.textContent = month;
         }
-
         function populateCategoryFilter() {
             const select = document.getElementById('category-filter');
             const categories = new Set();
@@ -579,7 +550,6 @@
                 select.appendChild(opt);
             });
         }
-
         function populateCategoryDatalist() {
             const categories = new Set();
             allHustlers.forEach(h => {
@@ -598,11 +568,9 @@
                 list2.appendChild(opt2);
             });
         }
-
         function filterHustlers() {
             const search = document.getElementById('search-input').value.toLowerCase().trim();
             const categoryFilter = document.getElementById('category-filter').value;
-
             filteredHustlers = allHustlers.filter(h => {
                 const matchesSearch = !search ||
                     (h.name || '').toLowerCase().includes(search) ||
@@ -613,14 +581,11 @@
                     (h.category || '').toLowerCase() === categoryFilter;
                 return matchesSearch && matchesCategory;
             });
-
             currentPage = 1;
             applySortAndPaginate();
         }
-
         function applySortAndPaginate() {
             let sorted = [...filteredHustlers];
-
             if (currentSort === 'newest') {
                 sorted.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             } else if (currentSort === 'oldest') {
@@ -634,15 +599,12 @@
             } else if (currentSort === 'rate-asc') {
                 sorted.sort((a, b) => (Number(a.rate || 0) - Number(b.rate || 0)));
             }
-
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const pageItems = sorted.slice(start, end);
-
             renderAdminHustlers(pageItems);
             updatePaginationControls(sorted.length);
         }
-
         function renderAdminHustlers(hustlersToShow) {
             if (hustlersToShow.length === 0) {
                 if (allHustlers.length === 0) {
@@ -662,24 +624,18 @@
                 pendingCountEl.textContent = allHustlers.filter(h => !h.verified).length;
                 return;
             }
-
             const pending = allHustlers.filter(h => !h.verified).length;
             totalCountEl.textContent = allHustlers.length;
             pendingCountEl.textContent = pending;
-
             adminContainer.innerHTML = '';
-
             hustlersToShow.forEach(h => {
                 const date = h.timestamp ? new Date(h.timestamp).toLocaleString('en-ZA') : 'Unknown';
                 const statusClass = h.verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
                 const statusText = h.verified ? 'VERIFIED' : 'PENDING';
-
                 const imageHtml = h.imageUrl
                     ? `<img src="${h.imageUrl}" alt="${h.name}" class="w-24 h-24 rounded-xl object-cover shadow">`
                     : `<div class="bg-gray-200 border-2 border-dashed rounded-xl w-24 h-24 flex items-center justify-center text-3xl font-bold text-gray-400">${h.name.charAt(0).toUpperCase()}</div>`;
-
                 const whatsappLink = h.phone ? `https://wa.me/${h.phone.replace(/\D/g,'')}` : '#';
-
                 const card = `
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
                     <div class="p-6 flex flex-col md:flex-row">
@@ -708,15 +664,15 @@
                             <p class="text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100"><strong>Bio:</strong> ${h.bio || 'No bio provided'}</p>
                         </div>
                         <div class="ml-0 md:ml-8 mt-6 md:mt-0 actions-column flex flex-row md:flex-col gap-3">
-                            <button onclick="toggleVerify('${h.id}', ${!h.verified})" 
+                            <button onclick="toggleVerify('${h.id}', ${!h.verified})"
                                     class="action-btn px-6 py-3 rounded-full bg-transparent hover:bg-gray-100 text-black font-bold transition border-2 border-black/90 shadow-sm">
                                 ${h.verified ? 'Unverify' : 'Verify'}
                             </button>
-                            <button onclick="openEditModal({id: '${h.id}', name: \`${(h.name || '').replace(/`/g,'\\`')}\`, category: \`${(h.category || '').replace(/`/g,'\\`')}\`, phone: \`${(h.phone || '').replace(/`/g,'\\`')}\`, location: \`${(h.location || '').replace(/`/g,'\\`')}\`, rate: '${h.rate || ''}', bio: \`${(h.bio || '').replace(/`/g,'\\`')}\`, imageUrl: \`${(h.imageUrl || '').replace(/`/g,'\\`')}\`})" 
+                            <button onclick="openEditModal({id: '${h.id}', name: \`${(h.name || '').replace(/`/g,'\\`')}\`, category: \`${(h.category || '').replace(/`/g,'\\`')}\`, phone: \`${(h.phone || '').replace(/`/g,'\\`')}\`, location: \`${(h.location || '').replace(/`/g,'\\`')}\`, rate: '${h.rate || ''}', bio: \`${(h.bio || '').replace(/`/g,'\\`')}\`, imageUrl: \`${(h.imageUrl || '').replace(/`/g,'\\`')}\`})"
                                     class="action-btn px-6 py-3 rounded-full bg-transparent hover:bg-gray-100 text-black font-bold transition border-2 border-black/90 shadow-sm">
                                 Edit
                             </button>
-                            <button onclick="deleteHustler('${h.id}')" 
+                            <button onclick="deleteHustler('${h.id}')"
                                     class="action-btn px-6 py-3 rounded-full bg-transparent hover:bg-gray-100 text-black font-bold transition border-2 border-black/90 shadow-sm">
                                 Delete
                             </button>
@@ -727,11 +683,9 @@
                         </div>
                     </div>
                 </div>`;
-
                 adminContainer.innerHTML += card;
             });
         }
-
         function copyPhoneNumber(phone) {
             navigator.clipboard.writeText(phone).then(() => {
                 showToast("Phone number copied!", "success");
@@ -739,7 +693,6 @@
                 showToast("Failed to copy phone number", "error");
             });
         }
-
         function updatePaginationControls(totalFiltered) {
             const totalPages = Math.ceil(totalFiltered / itemsPerPage);
             let pagination = document.getElementById('pagination');
@@ -747,28 +700,24 @@
                 if (pagination) pagination.remove();
                 return;
             }
-
             if (!pagination) {
                 pagination = document.createElement('div');
                 pagination.id = 'pagination';
                 pagination.className = 'flex justify-center items-center gap-4 mt-8';
                 document.querySelector('.max-w-7xl').appendChild(pagination);
             }
-
             pagination.innerHTML = `
                 <button onclick="prevPage()" class="px-5 py-2.5 bg-gray-200 text-gray-800 rounded-lg font-medium ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'} transition" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
                 <span class="text-gray-700 font-medium">Page ${currentPage} of ${totalPages}</span>
                 <button onclick="nextPage()" class="px-5 py-2.5 bg-gray-200 text-gray-800 rounded-lg font-medium ${currentPage >= totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'} transition" ${currentPage >= totalPages ? 'disabled' : ''}>Next</button>
             `;
         }
-
         function prevPage() {
             if (currentPage > 1) {
                 currentPage--;
                 applySortAndPaginate();
             }
         }
-
         function nextPage() {
             const totalPages = Math.ceil(filteredHustlers.length / itemsPerPage);
             if (currentPage < totalPages) {
@@ -776,14 +725,11 @@
                 applySortAndPaginate();
             }
         }
-
         // ── Charts (only Verification Rate pie remains) ─────────────
         let verificationChart;
-
         function renderCharts() {
             const verifiedCount = allHustlers.filter(h => h.verified).length;
             const pendingCount = allHustlers.length - verifiedCount;
-
             if (verificationChart) verificationChart.destroy();
             verificationChart = new Chart(document.getElementById('verificationChart'), {
                 type: 'pie',
@@ -804,16 +750,13 @@
                 }
             });
         }
-
         // ── Photo Upload Helper ─────────────────────────────────────
         async function uploadPhoto(file, oldUrl = null) {
             if (!file) return oldUrl;
-
             if (file.size > 2 * 1024 * 1024) {
                 showToast("File too large (max 2MB)", "error");
                 return null;
             }
-
             const storageRef = storage.ref('hustler_photos/' + Date.now() + '_' + file.name);
             try {
                 const snapshot = await storageRef.put(file);
@@ -824,26 +767,21 @@
                 return null;
             }
         }
-
         // ── Add Hustler ─────────────────────────────────────────────
         async function submitNewHustler() {
             const name = document.getElementById('new-name').value.trim();
             const category = document.getElementById('new-category').value.trim();
             const phone = document.getElementById('new-phone').value.trim();
-
             if (!name || !category || !phone) {
                 showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
-
             const file = document.getElementById('new-photo').files[0];
             let imageUrl = null;
-
             if (file) {
                 imageUrl = await uploadPhoto(file);
                 if (!imageUrl) return;
             }
-
             const newHustler = {
                 name, category, phone,
                 location: document.getElementById('new-location').value.trim() || null,
@@ -853,7 +791,6 @@
                 verified: false,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
-
             db.ref('hustlers').push(newHustler)
                 .then((ref) => {
                     logAction('add_hustler', ref.key, { name, category, phone });
@@ -862,28 +799,23 @@
                 })
                 .catch(err => showToast("Error adding hustler: " + err.message, "error"));
         }
-
         // ── Edit Hustler ────────────────────────────────────────────
         async function submitEditedHustler() {
             const id = document.getElementById('edit-id').value;
             const name = document.getElementById('edit-name').value.trim();
             const category = document.getElementById('edit-category').value.trim();
             const phone = document.getElementById('edit-phone').value.trim();
-
             if (!name || !category || !phone) {
                 showToast("Name, Category, and Phone Number are required", "error");
                 return;
             }
-
             const current = allHustlers.find(h => h.id === id) || {};
             let imageUrl = current.imageUrl;
-
             const file = document.getElementById('edit-photo').files[0];
             if (file) {
                 imageUrl = await uploadPhoto(file, current.imageUrl);
                 if (!imageUrl) return;
             }
-
             const updatedHustler = {
                 name, category, phone,
                 location: document.getElementById('edit-location').value.trim() || null,
@@ -893,9 +825,7 @@
                 verified: current.verified || false,
                 timestamp: current.timestamp || firebase.database.ServerValue.TIMESTAMP
             };
-
             logAction('edit_hustler', id, { name, category, phone });
-
             db.ref('hustlers/' + id).update(updatedHustler)
                 .then(() => {
                     showToast("Hustler updated successfully!", "success");
@@ -903,7 +833,6 @@
                 })
                 .catch(err => showToast("Error updating hustler: " + err.message, "error"));
         }
-
         function openEditModal(hustler) {
             document.getElementById('edit-id').value = hustler.id;
             document.getElementById('edit-name').value = hustler.name || '';
@@ -913,7 +842,6 @@
             document.getElementById('edit-rate').value = hustler.rate || '';
             document.getElementById('edit-bio').value = hustler.bio || '';
             document.getElementById('edit-image-url').value = hustler.imageUrl || '';
-
             const preview = document.getElementById('current-photo-preview');
             const img = document.getElementById('current-photo-img');
             if (hustler.imageUrl) {
@@ -922,17 +850,14 @@
             } else {
                 preview.classList.add('hidden');
             }
-
             document.getElementById('edit-modal').classList.remove('hidden');
         }
-
         function toggleVerify(id, makeVerified) {
             logAction(makeVerified ? 'verify' : 'unverify', id);
             db.ref('hustlers/' + id).update({ verified: makeVerified })
                 .then(() => showToast(makeVerified ? "Hustler verified" : "Verification removed", "success"))
                 .catch(err => showToast('Error updating status: ' + err.message, "error"));
         }
-
         function deleteHustler(id) {
             showToast("Are you sure you want to permanently delete this hustler? This cannot be undone.", "warning");
             const container = document.getElementById('toast-container');
@@ -951,7 +876,6 @@
             container.appendChild(confirmToast);
             setTimeout(() => confirmToast.classList.add('show'), 100);
         }
-
         function confirmDelete(id, toastElement) {
             logAction('delete_hustler', id);
             db.ref('hustlers/' + id).remove()
@@ -970,18 +894,15 @@
                     }
                 });
         }
-
         function openAddModal() {
             document.getElementById('add-modal').classList.remove('hidden');
             ['new-name','new-category','new-phone','new-location','new-rate','new-bio','new-image-url']
                 .forEach(id => document.getElementById(id).value = '');
             document.getElementById('new-photo').value = '';
         }
-
         function closeAddModal() {
             document.getElementById('add-modal').classList.add('hidden');
         }
-
         function closeEditModal() {
             document.getElementById('edit-modal').classList.add('hidden');
         }
