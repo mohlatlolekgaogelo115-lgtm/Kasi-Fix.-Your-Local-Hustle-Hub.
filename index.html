@@ -538,7 +538,8 @@
         }
         function populateCategoryFilter() {
             const select = document.getElementById('category-filter');
-            const categories = new Set();
+            const defaultCategories = ['Small Plumbing Fixes', 'Geyser Repairs', 'Painting', 'Tiling', 'Door/Cupboard Fixes', 'TV Wall Mounting', 'Minor Electrical', 'Gate Motor Repairs'];
+            const categories = new Set(defaultCategories);
             allHustlers.forEach(h => {
                 if (h.category && h.category.trim()) categories.add(h.category.trim());
             });
@@ -551,7 +552,8 @@
             });
         }
         function populateCategoryDatalist() {
-            const categories = new Set();
+            const defaultCategories = ['Small Plumbing Fixes', 'Geyser Repairs', 'Painting', 'Tiling', 'Door/Cupboard Fixes', 'TV Wall Mounting', 'Minor Electrical', 'Gate Motor Repairs'];
+            const categories = new Set(defaultCategories);
             allHustlers.forEach(h => {
                 if (h.category && h.category.trim()) categories.add(h.category.trim());
             });
